@@ -1,0 +1,21 @@
+Group has several relevant users
+Group has several general 'chores' that either repeat or are one off
+Each chore has exactly one associated chore item
+Each chore item is linked to one user and has a set deadline
+
+Moderator can add new chore for group and specifies contents whether it repeats and thus how often
+    additionaly, chore can be allocated to fixed user or random if fixed user then must be specified
+When chore is added 1 associated chore item is also created
+
+Moderator can edit chore for group and this may result in chore item being edited
+
+Moderator can remove chore for group and this means associated chore item must be deleted
+
+User can request to join group thus creating a new join request
+
+Moderator can see list of join request users and choose whether to add them to the group
+
+Group chores overview page shows all chore items with associated group id
+
+User chore overview page shows all chore items with associated user id
+

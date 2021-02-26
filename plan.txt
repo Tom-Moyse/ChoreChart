@@ -1,0 +1,41 @@
+Pages:
+Landing page
+Login page
+Register page
+
+On new user (another landing page type thing):
+Join (chore/household) group
+/ Create new group probs via invite/join code
+This must be accepted by group 'moderator' (1 or more)
+
+Group overview page:
+List of users in group (name + pfp?)
+Table with current chore allocation (similar to single user but shows all chores)
+(if moderator buttons to view moderator pages)
+
+Single user overview page:
+List of chores for each day in a set timeframe
+Click on chore for popup with more information (e.g. deadline) + can mark as complete
+
+For group and single user overview - perhaps resemble calendar/tabula sort of thing
+
+Moderator manage chores page:
+Add new chore
+Edit chore
+Delete chore
+Set chore allocation strategy (random/fixed)
+If fixed:
+	Edit who chore is allocated to
+
+Moderator manage group page:
+Get invite code
+Remove user from group
+Accept request to join group
+Promote another user to moderator
+
+Account details page:
+Show current details - options to change:
+    email
+    password
+    profile picture
+leave current group

@@ -1,0 +1,24 @@
+HTML + CSS for:
+    Landing Page - DONE
+    Register Page - DONE
+    Login Page - DONE
+    Join/new group page
+    Group chores overview page
+    User chores overview page
+    Moderator manage chores page
+    Moderator manage group page
+    Account details page
+
+PHP login session
+SQL database design - DONE
+SQL database implementation - DONE
+
+JS/PHP for:
+    Register Page - 50%
+    Login Page - 50%
+    Join/new group page
+    Group chores overview page
+    User chores overview page
+    Moderator manage chores page
+    Moderator manage group page
+    Account details page
