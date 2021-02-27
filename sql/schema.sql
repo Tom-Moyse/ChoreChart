@@ -6,7 +6,8 @@ DROP TABLE ChoreItem;
 
 CREATE TABLE ChoreGroup(
     ID INTEGER PRIMARY KEY,
-    code VARCHAR(10)
+    code VARCHAR(10),
+    gname TEXT
 );
 
 CREATE TABLE JoinRequest(
