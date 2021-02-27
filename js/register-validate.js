@@ -12,6 +12,9 @@ function validateForm(){
     var unameregex = /^([a-zA-Z0-9_-])+$/;
     var passregex = /^\S*$/
 
+    $("#utaken").addClass("hidden");
+    $("#etaken").addClass("hidden");
+
     if (uname != ""){
         $("#umissing").addClass("hidden");
     }
@@ -93,18 +96,17 @@ function validateForm(){
         type:'post',
         data:{username:uname, email:email, password1:pass1, password2:pass2},
         success:function(response){
-            alert(response);
             switch (response) {
-                case 0:
-                    window.location('joingroup.php');
+                case '0':
+                    window.location.href = 'joingroup.php';
                     break;
                 default:
                     error = true;
-                case 1:
+                case '1':
                     $("#utaken").removeClass("hidden");
                     break;
-                case 2:
-                    $("#ptaken").removeClass("hidden");
+                case '2':
+                    $("#etaken").removeClass("hidden");
                     break;
             }
         }

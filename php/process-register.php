@@ -75,7 +75,7 @@ if (!isset($_SESSION)){
 
 // Setup session and redirect user
 $stmt = $connection->prepare('SELECT ID FROM User WHERE email=:em');
-$stmt->bindValue(':em', $email, SQLITE3_TEXT);
+$stmt->bindValue(':em', $_POST['email'], SQLITE3_TEXT);
 $results = $stmt->execute();
 $_SESSION['uid'] = $results->fetchArray(SQLITE3_ASSOC)['ID'];
 

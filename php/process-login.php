@@ -7,9 +7,15 @@ if ($_SERVER['REQUEST_METHOD'] != 'POST'){
 include ("./database.php");
 $connection = new Database();
 
-// Check if entries match expected values
-$stmt = $connection->prepare('SELECT pass FROM User WHERE username=:user');
-$stmt->bindValue(':user', $_POST['user'], SQLITE3_TEXT);
+// Check if login is username or password
+if (str_contains($_POST['user'],"@")){
+    $stmt = $connection->prepare('SELECT pass FROM User WHERE email=:email');
+    $stmt->bindValue(':email', $_POST['user'], SQLITE3_TEXT);
+}
+else{
+    $stmt = $connection->prepare('SELECT pass FROM User WHERE username=:user');
+    $stmt->bindValue(':user', $_POST['user'], SQLITE3_TEXT);
+}
 $results = $stmt->execute();
 $res = $results->fetchArray(SQLITE3_ASSOC);
 if ($res != null){
@@ -27,8 +33,15 @@ else{
 
 
 //Login user
-$stmt = $connection->prepare('SELECT ID FROM User WHERE username=:user');
-$stmt->bindValue(':user', $_POST['user'], SQLITE3_TEXT);
+if (str_contains($_POST['user'],"@")){
+    $stmt = $connection->prepare('SELECT ID FROM User WHERE email=:email');
+    $stmt->bindValue(':email', $_POST['user'], SQLITE3_TEXT);
+}
+else{
+    $stmt = $connection->prepare('SELECT ID FROM User WHERE username=:user');
+    $stmt->bindValue(':user', $_POST['user'], SQLITE3_TEXT);
+}
+
 $results = $stmt->execute();
 
 if (!isset($_SESSION)){

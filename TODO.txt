@@ -15,7 +15,7 @@ SQL database implementation - DONE
 
 JS/PHP for:
     Register Page - 50%
-    Login Page - 50%
+    Login Page - Done
     Join/new group page
     Group chores overview page
     User chores overview page
