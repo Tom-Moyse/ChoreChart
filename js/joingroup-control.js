@@ -27,10 +27,10 @@ function joinGroup(){
 
     if (!coderegex.test(code) || code.length != 5){
         $("#cinvalid").removeClass("hidden");
+        return false;
     }
     else{
         $("#cinvalid").addClass("hidden");
-        return false;
     }
 
     // Check validity of group invite via ajax (and add user join request)
@@ -39,6 +39,7 @@ function joinGroup(){
         type:'post',
         data:{code:code},
         success:function(response){
+            alert(response);
             switch (response) {
                 case '0':
                     window.location.href = 'joinstatus.php';
