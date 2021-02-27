@@ -2,14 +2,14 @@ HTML + CSS for:
     Landing Page - DONE
     Register Page - DONE
     Login Page - DONE
-    Join/new group page
+    Join/new group page - DONE
     Group chores overview page
     User chores overview page
     Moderator manage chores page
     Moderator manage group page
     Account details page
 
-PHP login session
+PHP login/sign-out session - DONE
 SQL database design - DONE
 SQL database implementation - DONE
 

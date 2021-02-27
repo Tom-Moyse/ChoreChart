@@ -19,6 +19,7 @@ if ($res['GroupID'] == null){
     exit();
 }
 else{
+    $_SESSION['gid'] = $res['GroupID'];
     header("Location: ../chores.php");
     exit();
 }
