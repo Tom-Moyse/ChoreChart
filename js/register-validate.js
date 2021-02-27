@@ -1,5 +1,5 @@
 $(document).ready(function (){
-    $('form').submit(validateForm);
+    $('form').submit( validateForm );
 })
 
 function validateForm(){

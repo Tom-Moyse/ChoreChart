@@ -1,4 +1,5 @@
 <?php
+
 class Database {
 		
 	private $database;
@@ -34,7 +35,7 @@ class Database {
 	}
 	
 	private function getConnection() {
-		$conn = new SQLite3('../sql/chorechart.db');
+		$conn = new SQLite3(ROOT.'/sql/chorechart.db');
 		return $conn;
 	}
 }

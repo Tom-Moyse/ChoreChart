@@ -6,7 +6,7 @@ DROP TABLE ChoreItem;
 
 CREATE TABLE ChoreGroup(
     ID INTEGER PRIMARY KEY,
-    code VARCHAR(10),
+    code VARCHAR(5),
     gname TEXT
 );
 

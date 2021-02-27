@@ -4,14 +4,14 @@ if ($_SERVER['REQUEST_METHOD'] != 'POST'){
     exit();
 }
 
-include ("./database.php");
+include_once("../main.php");
+include(ROOT."/php/database.php");
 $connection = new Database();
 
 // Verify data server-side to avoid issues from bypassing client verification
-$userExpr = "/^[a-zA-Z0-9_-]+$/i";
+$userExpr = "/^[a-z0-9_-]+$/i";
 $passExpr = "/\s+/";
 $error = false;
-
 // Verify username
 if (preg_match($userExpr, $_POST['username'])){
     $stmt = $connection->prepare('SELECT ID FROM User WHERE username=:user');

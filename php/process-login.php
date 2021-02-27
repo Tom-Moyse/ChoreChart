@@ -4,7 +4,8 @@ if ($_SERVER['REQUEST_METHOD'] != 'POST'){
     exit();
 }
 
-include ("./database.php");
+include_once("../main.php");
+include(ROOT."/php/database.php");
 $connection = new Database();
 
 // Check if login is username or password

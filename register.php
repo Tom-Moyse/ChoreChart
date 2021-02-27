@@ -1,3 +1,7 @@
+<?php
+include("main.php");
+end_session();
+?>
 <!DOCTYPE html>
 <html lang="en">
     <head>
