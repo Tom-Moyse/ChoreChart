@@ -14,8 +14,8 @@ SQL database design - DONE
 SQL database implementation - DONE
 
 JS/PHP for:
-    Register Page - 50%
-    Login Page - Done
+    Register Page - DONE
+    Login Page - DONE
     Join/new group page
     Group chores overview page
     User chores overview page

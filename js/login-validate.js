@@ -30,6 +30,7 @@ function validateForm(){
         return false;
     }
 
+    alert("Y");
     // Attempt to login here via AJAX
     $.ajax({
         url:'./php/process-login.php',
@@ -37,7 +38,7 @@ function validateForm(){
         data:{user:uename, pass:pass},
         success:function(response){
             if (response == 0){
-                window.location = "routepage.php";
+                window.location.href = "./php/routepage.php";
             }
             else{
                 $("#match").removeClass("hidden");
