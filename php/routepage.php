@@ -14,5 +14,12 @@ $stmt = $connection->prepare('SELECT GroupID FROM User WHERE ID=:id');
 $stmt->bindValue(':id', $_SESSION['uid'], SQLITE3_INTEGER);
 $results = $stmt->execute();
 $res = $results->fetchArray(SQLITE3_ASSOC);
-print_r($res);
+if ($res['GroupID'] == null){
+    header("Location: ../joingroup.php");
+    exit();
+}
+else{
+    header("Location: ../chores.php");
+    exit();
+}
 ?>

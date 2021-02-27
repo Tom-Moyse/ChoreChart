@@ -30,7 +30,6 @@ function validateForm(){
         return false;
     }
 
-    alert("Y");
     // Attempt to login here via AJAX
     $.ajax({
         url:'./php/process-login.php',
