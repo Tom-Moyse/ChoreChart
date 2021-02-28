@@ -39,7 +39,6 @@ function joinGroup(){
         type:'post',
         data:{code:code},
         success:function(response){
-            alert(response);
             switch (response) {
                 case '0':
                     window.location.href = 'joinstatus.php';

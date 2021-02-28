@@ -17,7 +17,7 @@ JS/PHP for:
     Register Page - DONE
     Login Page - DONE
     Join/new group page - DONE
-    Join status page
+    Join status page - DONE
     Group chores overview page
     User chores overview page
     Moderator manage chores page

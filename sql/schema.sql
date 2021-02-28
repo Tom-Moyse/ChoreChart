@@ -22,6 +22,7 @@ CREATE TABLE User(
   ID INTEGER PRIMARY KEY, 
   email VARCHAR(50),
   username VARCHAR(30),
+  displayname VARCHAR(30),
   pass PASSWORD VARCHAR(255),
   moderator BOOLEAN,
   GroupID INTEGER,

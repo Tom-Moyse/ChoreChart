@@ -41,9 +41,17 @@ function require_group(){
 
 function require_no_group(){
     if (isset($_SESSION['gid'])){
-        echo("Wait what?");
-        exit();
         header("Location: ./php/routepage.php");
     }
+}
+
+function is_mod(){
+    $connection = new Database();
+    $stmt = $connection->prepare('SELECT moderator FROM User WHERE ID=:id');
+    $stmt->bindValue(':id', $_SESSION['uid'], SQLITE3_INTEGER);
+    $results = $stmt->execute();
+    $res = $results->fetchArray(SQLITE3_ASSOC)['moderator'];
+
+    return ($res == 1);
 }
 ?>

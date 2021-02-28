@@ -112,6 +112,27 @@ form input[type="text"], form input[type="password"]{
     color: #404040;
 }
 
+.left-panel{
+    float:left;
+    width:83%;
+}
+
+.right-panel{
+    float: right;
+    width:17%;
+}
+
+.right-container{
+    background-color: whitesmoke;
+    border-radius: 5px 0 0 5px;
+    box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+    padding-left: 2%;
+}
+
+.right-container *{
+    color: #404040;
+}
+
 .button{
     appearance: button;
     display: block;
@@ -186,10 +207,84 @@ form input[type="text"], form input[type="password"]{
     to {transform: scale(1)}
 }
 
+#members tr td img{
+    border-radius: 50%;
+    height: 40px;
+}
+
+#members tr td:last-child{
+    padding-left: 5%;
+}
+
+#members tr td:nth-child(2){
+    padding-left:5px;
+}
+
 #nav-img{
     position: absolute;
     height: 10%;
     margin-left: 10px;
+}
+
+#chore-container{
+    width: 100%;
+    display:block;
+}
+
+#chore-container > *:first-child{
+    float:left;
+}
+
+#chore-container > *:nth-child(2){
+    float:right;
+}
+
+#chore-container .scroll-button{
+    margin: 20px;
+}
+
+#chores{
+    overflow: hidden;
+    background-color: whitesmoke;
+    border-radius: 5px;
+    box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+}
+
+#chores *{
+    color: #404040;
+}
+
+#chores table{
+    width:100%;
+}
+
+#chores table tr td{
+    vertical-align: top;
+}
+
+#chores table tr td ul{
+    list-style-type: none;
+}
+
+#chores table tr td p{
+    text-align: left;
+}
+
+.scroll-button{
+    text-align: center;
+    display: block;
+    background-color: rgb(90, 188, 233);
+    border-radius: 50%;
+    font-size: large;
+    width:30px;
+    height: 30px;
+    line-height: 30px;
+    cursor: pointer;
+}
+
+.scroll-button:hover{
+    transition-duration: 0.4s;
+    box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
 }
 
 .warning{
