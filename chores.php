@@ -37,7 +37,7 @@ require_no_joining_status();
                                     <p>28/02/2021</p>
                                     <ul>
                                         <li><a>C1</a></li>
-                                        <li><a>C2</a></li>
+                                        <li id="complete"><a>C2</a></li>
                                         <li><a>C3</a></li>
                                     </ul>
                                 </td>
@@ -52,9 +52,9 @@ require_no_joining_status();
                                     <p>02/03/2021</p>
                                     <ul>
                                         <li><a>E1</a></li>
-                                        <li><a>E2</a></li>
+                                        <li id="complete"><a>E2</a></li>
                                         <li><a>E3</a></li>
-                                        <li><a>E4</a></li>
+                                        <li id="complete"><a>E4</a></li>
                                     </ul>
                                 </td>
                                 <td>
@@ -67,7 +67,7 @@ require_no_joining_status();
                                 <td>
                                     <p>04/03/2021</p>
                                     <ul>
-                                        <li><a>G1</a></li>
+                                        <li id="complete"><a>G1</a></li>
                                         <li><a>G2</a></li>
                                         <li><a>G3</a></li>
                                     </ul>
@@ -101,8 +101,8 @@ require_no_joining_status();
                                 <td>
                                     <p>08/03/2021</p>
                                     <ul>
-                                        <li><a>F1</a></li>
-                                        <li><a>F2</a></li>
+                                        <li id="complete"><a>F1</a></li>
+                                        <li id="complete"><a>F2</a></li>
                                     </ul>
                                 </td>
                                 <td>
