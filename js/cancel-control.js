@@ -1,4 +1,4 @@
-$(document).ready(function (){
+$(function (){
     getRequestMessage();
     $('#cancel').on('click', cancelRequest);
 })

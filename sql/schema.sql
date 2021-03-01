@@ -33,8 +33,10 @@ CREATE TABLE Chore(
     ID INTEGER PRIMARY KEY,
     contents TEXT,
     repeats BOOLEAN,
-    frequency INTEGER,
+    interval TEXT,
     fixed BOOLEAN,
+    startdate DATETIME,
+    lastchoreitemdate DATETIME,
     GroupID INTEGER,
     UserID INTEGER,
     FOREIGN KEY(UserID) REFERENCES User(ID),
@@ -43,6 +45,7 @@ CREATE TABLE Chore(
 
 CREATE TABLE ChoreItem(
     ID INTEGER PRIMARY KEY,
+    contents TEXT,
     completed BOOLEAN,
     deadline DATETIME,
     ChoreID INTEGER,

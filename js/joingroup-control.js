@@ -1,4 +1,4 @@
-$(document).ready(function (){
+$(function (){
     $('#join-form').submit( joinGroup );
     $('#create-form').submit( createGroup );
 
