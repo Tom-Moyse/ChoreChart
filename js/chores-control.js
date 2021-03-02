@@ -1,10 +1,9 @@
-var date = new Date();
-date.setDate(date.getDate() + 10)
-var formatDate = date.toJSON().slice(0,10);
+var rightDate = new Date();
+rightDate.setDate(rightDate.getDate()+10);
+var latestDate = new Date(rightDate);
+
 
 $(function(){
-    updateChoreItems();
-
     $(".chore-element").on('click', function(e){
         var pos = $(e.target).offset();
         var width = $(e.target).width();
@@ -17,13 +16,16 @@ $(function(){
     $(document).on('click', function(e){
         $("#info-popup").addClass("hidden"); 
     })
+
+    $('#left-scroll').on('click', doLeftScroll);
+    $('#right-scroll').on('click', doRightScroll);
 });
 
 function updateChoreItems(){
     $.ajax({
         url:'./php/gen-choreitems.php',
         type:'post',
-        data:{date: formatDate},
+        data:{date: rightDate.toJSON().slice(0,10)},
         success:function(response){
             if (response == "0"){
                 console.log("Update items successfully");
@@ -34,4 +36,48 @@ function updateChoreItems(){
             }
         }
     })
+}
+
+function doLeftScroll(){
+    rightDate.setDate(rightDate.getDate() - 10);
+    var newLeftDate = new Date(rightDate);
+    newLeftDate.setDate(newLeftDate.getDate() - 20);
+    console.log(newLeftDate.toJSON().slice(0,10));
+
+    $('#right-chores').html($('#mid-chores').html());
+    $('#mid-chores').html($('#left-chores').html());
+
+    $.ajax({
+        url:'./php/get-choreitems.php',
+        type:'post',
+        data:{date: newLeftDate.toJSON().slice(0,10)},
+        success:function(html){
+            $("#left-chores").html(html);
+        }
+    });
+}
+
+function doRightScroll(){
+    // Update chore items if highest date checked on current page visit
+    rightDate.setDate(rightDate.getDate() + 10);
+    if (rightDate.getTime() > latestDate.getTime()){
+        updateChoreItems();
+        latestDate.setDate(rightDate.getDate());
+    }
+    console.log(rightDate.toJSON().slice(0,10));
+
+    var rightContent = $('#right-chores').html();
+    var midContent = $('#mid-chores').html();
+
+    $('#mid-chores').html(rightContent);
+    $('#left-chores').html(midContent);
+
+    $.ajax({
+        url:'./php/get-choreitems.php',
+        type:'post',
+        data:{date: rightDate.toJSON().slice(0,10)},
+        success:function(html){
+            $("#right-chores").html(html);
+        }
+    });
 }

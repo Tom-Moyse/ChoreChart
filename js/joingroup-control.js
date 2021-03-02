@@ -81,7 +81,6 @@ function createGroup(){
         type:'post',
         data:{name:name},
         success:function(response){
-            alert(response);
             switch (response) {
                 case '0':
                     window.location.href = 'chores.php';

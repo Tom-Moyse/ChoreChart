@@ -63,7 +63,7 @@ if ($error){
 }
 
 // Insert data into table
-$stmt = $connection->prepare('INSERT INTO User VALUES (NULL, :email, :username, NULL, :pass, 0, NULL)');
+$stmt = $connection->prepare('INSERT INTO User VALUES (NULL, :email, :username, :username, :pass, 0, NULL)');
 $stmt->bindValue(':email', $_POST['email'], SQLITE3_TEXT);
 $stmt->bindValue(':username', $_POST['username'], SQLITE3_TEXT);
 $stmt->bindValue(':pass', $password, SQLITE3_TEXT);
