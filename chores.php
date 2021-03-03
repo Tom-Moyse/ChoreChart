@@ -237,16 +237,31 @@ while($res = $results->fetchArray(SQLITE3_ASSOC)){
                 <h3>Members</h3>
                 <div class="right-container">
                     <table id="members">
-                        <tr>
-                            <td><embed src="img/crown.svg" alt="Profile Picture"></td>
-                            <td><img src="img/usr/default.png" alt="Profile Picture"></td>
-                            <td>Billy Wonder but actually a stupidly long name</td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td><img src="img/usr/default.png" alt="Profile Picture"></td>
-                            <td>Bob Marley</td>
-                        </tr>
+                        <?php
+                        $connection = new Database();
+                        $query = 'SELECT User.ID, User.displayname, User.moderator FROM User INNER JOIN
+                            ChoreGroup ON User.GroupID = ChoreGroup.ID WHERE ChoreGroup.ID = :gid';
+                        $stmt = $connection->prepare($query);
+                        $stmt->bindValue(':gid', $_SESSION['gid'], SQLITE3_INTEGER);
+                        $members = $stmt->execute();
+                        
+                        while ($member = $members->fetchArray(SQLITE3_ASSOC)){
+                            echo ('<tr>');
+                            if ($member['moderator'] == 1){
+                                echo ('<td><embed src="img/crown.svg" alt="Mod Icon"></td>');
+                            }
+                            else{
+                                echo ('<td></td>');
+                            }
+                            if (file_exists(ROOT."/img/usr/".$member['ID'].".jpeg")){
+                                echo ('<td><img src="img/usr/'.$member['ID'].'.jpeg" alt="Profile Picture"></td>');
+                            }
+                            else{
+                                echo ('<td><img src="img/usr/default.png" alt="Profile Picture"></td>');
+                            }
+                            echo('<td>'.$member['displayname'].'</td></tr>');
+                        }
+                        ?>
                     </table>
                 </div>
             </div>
