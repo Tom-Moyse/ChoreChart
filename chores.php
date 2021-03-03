@@ -115,7 +115,7 @@ while($res = $results->fetchArray(SQLITE3_ASSOC)){
                 </div>
             </div>
             <div class="left-panel">
-                <h3>Chores</h3>
+                <h4>Chores</h4>
                 <div id="chore-container">
                     <a class="scroll-button" id='left-scroll'>🡠</a>
                     <a class="scroll-button" id='right-scroll'>🡢</a>
@@ -234,9 +234,9 @@ while($res = $results->fetchArray(SQLITE3_ASSOC)){
                 </div>
             </div>
             <div class="right-panel">
-                <h3>Members</h3>
+                <h4>Members</h4>
                 <div class="right-container">
-                    <table id="members">
+                    <table class="members">
                         <?php
                         $connection = new Database();
                         $query = 'SELECT User.ID, User.displayname, User.moderator FROM User INNER JOIN
