@@ -210,6 +210,7 @@ form input[type="text"], form input[type="password"]{
 }
 
 #chore-popup tr td{
+    text-align: left;
     word-break: break-all;
 }
 

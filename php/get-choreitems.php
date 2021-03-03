@@ -70,10 +70,22 @@ while ($res= $page_results->fetchArray(SQLITE3_ASSOC)){
     }
     
 }
-echo ('</ul></td></tr></table>');
+if ($ran){
+    for ($i=$counter; $i<10; $i++) { 
+        $date = date('d/m/Y', strtotime("+ ".$i." days", strtotime($curr_date)));
+        if ($i == 5){
+            echo ('</ul></td></tr><tr><td><p>'.$date.'</p><ul>');
+        }
+        else{
+            echo ('</ul></td><td><p>'.$date.'</p><ul>');
+        }
+    }
+    echo ('</ul></td></tr></table></div>');
+}
+
 
 // If there are no chores make sure empty table is displayed
-if (!$ran){
+else{
     $date = date('d/m/Y', strtotime("+ ".$counter." days", strtotime($curr_date)));
     echo ('<table><tr><td><p>'.$date.'</p><ul>');
 
@@ -89,5 +101,4 @@ if (!$ran){
     }
     echo ('</ul></td></tr></table>');
 }
-
 ?>

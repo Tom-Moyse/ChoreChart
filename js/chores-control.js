@@ -5,11 +5,24 @@ var latestDate = new Date(rightDate);
 
 $(function(){
     $(".chore-element").on('click', function(e){
-        var pos = $(e.target).offset();
-        var width = $(e.target).width();
+        var target = $(e.target);
+        var pos = target.offset();
+        var width = target.width();
         pos.left += width;
         $("#info-popup").removeClass("hidden");  
         $("#info-popup").css(pos);
+        $("#cname").text(target.data("choreholder"));
+        $("#cdesc").text(target.data("contents"));
+        $("#cdate").text(target.data("deadline"));
+        if (target.hasClass("complete")){
+            $("#ccom").text("✓");
+            $("#ccom").css("color","green");
+        }
+        else{
+            $("#ccom").text("✖");
+            $("#ccom").css("color","red");
+        }
+        
         e.stopPropagation();
     });
 

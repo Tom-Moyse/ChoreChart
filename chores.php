@@ -1,4 +1,6 @@
 <?php
+error_reporting(E_ALL);
+ini_set("display_errors", 1);
 include_once('main.php');
 include(ROOT.'/php/utils.php');
 require_login();
@@ -172,10 +174,10 @@ while($res = $results->fetchArray(SQLITE3_ASSOC)){
                                 $counter++;
                             }
 
-                            
+                            $date_no_seconds = date("Y/m/d H:i", strtotime($res['deadline']));
                             // Output html relevant to current chore
                             $data_info = 'data-contents="'.$res['contents'].'" data-deadline="'.
-                                        $res['deadline'].'" data-choreholder="'.$res['displayname'].'"';
+                                        $date_no_seconds.'" data-choreholder="'.$res['displayname'].'"';
                             if ($res['completed'] == 0){
                                 echo ('<li class="chore-element" '.$data_info.'>'.shorten($res['contents']).'</li>');
                             }
@@ -184,10 +186,21 @@ while($res = $results->fetchArray(SQLITE3_ASSOC)){
                             }
                             
                         }
-                        echo ('</ul></td></tr></table></div>');
+                        if ($ran){
+                            for ($i=$counter; $i<10; $i++) { 
+                                $date = date('d/m/Y', strtotime("+ ".$i." days", strtotime($curr_date)));
+                                if ($i == 5){
+                                    echo ('</ul></td></tr><tr><td><p>'.$date.'</p><ul>');
+                                }
+                                else{
+                                    echo ('</ul></td><td><p>'.$date.'</p><ul>');
+                                }
+                            }
+                            echo ('</ul></td></tr></table></div>');
+                        }
                         
                         // If there are no chores make sure empty table is displayed
-                        if (!$ran){
+                        else{
                             $date = date('d/m/Y', strtotime("+ ".$counter." days", strtotime($curr_date)));
                             if ($show){
                                 echo ('<div id="'.$id.'" class="chores"><table><tr><td><p>'.$date.'</p><ul>');
