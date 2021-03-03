@@ -3,7 +3,7 @@ HTML + CSS for:
     Register Page - DONE
     Login Page - DONE
     Join/new group page - DONE
-    Group chores overview page
+    Group chores overview page - DONE
     User chores overview page
     Moderator manage chores page
     Moderator manage group page
@@ -18,7 +18,7 @@ JS/PHP for:
     Login Page - DONE
     Join/new group page - DONE
     Join status page - DONE
-    Group chores overview page
+    Group chores overview page - DONE
     User chores overview page
     Moderator manage chores page
     Moderator manage group page

@@ -21,11 +21,11 @@ $finish_date = date('Y-m-d' ,strtotime("+ 10 days", strtotime($_POST['date'])));
 
 $connection = new Database();
 $query = 'SELECT ChoreItem.contents, ChoreItem.completed, ChoreItem.deadline,
-    User.displayname FROM ChoreItem INNER JOIN User ON ChoreItem.UserID =
-    User.ID WHERE User.GroupID = :gid AND ChoreItem.deadline BETWEEN :d1 AND :d2
+    ChoreItem.ID FROM ChoreItem INNER JOIN User ON ChoreItem.UserID =
+    User.ID WHERE User.ID = :id AND ChoreItem.deadline BETWEEN :d1 AND :d2
     ORDER BY ChoreItem.deadline ASC';
 $stmt = $connection->prepare($query);
-$stmt->bindValue(':gid', $_SESSION['gid'], SQLITE3_INTEGER);
+$stmt->bindValue(':id', $_SESSION['uid'], SQLITE3_INTEGER);
 $stmt->bindValue(':d1', $_POST['date'], SQLITE3_TEXT);
 $stmt->bindValue(':d2', $finish_date, SQLITE3_TEXT);
 $page_results = $stmt->execute();
@@ -61,7 +61,7 @@ while ($res= $page_results->fetchArray(SQLITE3_ASSOC)){
     $date_no_seconds = date("d/m/Y H:i", strtotime($res['deadline']));
     // Output html relevant to current chore
     $data_info = 'data-contents="'.$res['contents'].'" data-deadline="'.
-                $date_no_seconds.'" data-choreholder="'.$res['displayname'].'"';
+                $date_no_seconds.'" data-choreid="'.$res['ID'].'"';
     if ($res['completed'] == 0){
         echo ('<li class="chore-element" '.$data_info.'>'.shorten($res['contents']).'</li>');
     }

@@ -1,6 +1,4 @@
 <?php
-error_reporting(E_ALL);
-ini_set("display_errors", 1);
 include_once('main.php');
 include(ROOT.'/php/utils.php');
 require_login();
@@ -174,7 +172,7 @@ while($res = $results->fetchArray(SQLITE3_ASSOC)){
                                 $counter++;
                             }
 
-                            $date_no_seconds = date("Y/m/d H:i", strtotime($res['deadline']));
+                            $date_no_seconds = date("d/m/Y H:i", strtotime($res['deadline']));
                             // Output html relevant to current chore
                             $data_info = 'data-contents="'.$res['contents'].'" data-deadline="'.
                                         $date_no_seconds.'" data-choreholder="'.$res['displayname'].'"';
