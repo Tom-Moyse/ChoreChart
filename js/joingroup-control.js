@@ -14,6 +14,9 @@ $(function (){
         e.stopPropagation();
     });
     $(document).on('click', function(e){
+        if( $(e.target).closest(".modal-content").length > 0 && !$(e.target).hasClass("button")) {
+            return false;
+        }
         $('#join-modal').addClass("hidden");
         $('#join-form').trigger("reset");
         $('#create-modal').addClass("hidden");

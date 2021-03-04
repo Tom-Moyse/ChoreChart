@@ -61,6 +61,10 @@ $(function(){
     });
 
     $(document).on('click', function(e){
+        if( $(e.target).closest(".modal-content").length > 0 && !$(e.target).hasClass("button")) {
+            return false;
+        }
+
         $("#chore-modal").addClass("hidden"); 
     })
 

@@ -27,6 +27,9 @@ $(function(){
     });
 
     $(document).on('click', function(e){
+        if( $(e.target).closest("#info-popup").length > 0 ) {
+            return false;
+        }
         $("#info-popup").addClass("hidden"); 
     })
 

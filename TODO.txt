@@ -5,7 +5,7 @@ HTML + CSS for:
     Join/new group page - DONE
     Group chores overview page - DONE
     User chores overview page - DONE
-    Moderator manage chores page
+    Moderator manage chores page - DONE
     Moderator manage group page
     Account details page
 

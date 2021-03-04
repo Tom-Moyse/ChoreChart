@@ -85,7 +85,7 @@ while($res = $results->fetchArray(SQLITE3_ASSOC)){
             include ("./php/navbar-internal-standard.php");
         }
         ?>
-        <div class="center-box">
+        <div class="center-box" style="padding:0;">
             <div id="info-popup" class="popup hidden">
                 <div class="popup-content fast-animate">
                     <table id="chore-popup" style="table-layout:fixed;width:100%;">
@@ -114,6 +114,16 @@ while($res = $results->fetchArray(SQLITE3_ASSOC)){
                     </table>
                 </div>
             </div>
+            <div id="title-container">
+                <h3>
+                <?php
+                    $stmt = $connection->prepare("SELECT gname FROM ChoreGroup WHERE ID=:gid");
+                    $stmt->bindValue(':gid', $_SESSION['gid'], SQLITE3_INTEGER);
+                    $results = $stmt->execute();
+                    echo ($results->fetchArray(SQLITE3_ASSOC)['gname']);
+                ?>
+                </h3>
+            </div> 
             <div class="left-panel">
                 <h4>Chores</h4>
                 <div id="chore-container">

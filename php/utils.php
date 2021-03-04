@@ -54,4 +54,14 @@ function is_mod(){
 
     return ($res == 1);
 }
+
+function is_user_mod($id){
+    $connection = new Database();
+    $stmt = $connection->prepare('SELECT moderator FROM User WHERE ID=:id');
+    $stmt->bindValue(':id', $id, SQLITE3_INTEGER);
+    $results = $stmt->execute();
+    $res = $results->fetchArray(SQLITE3_ASSOC)['moderator'];
+
+    return ($res == 1);
+}
 ?>
