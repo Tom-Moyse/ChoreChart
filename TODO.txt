@@ -6,7 +6,7 @@ HTML + CSS for:
     Group chores overview page - DONE
     User chores overview page - DONE
     Moderator manage chores page - DONE
-    Moderator manage group page
+    Moderator manage group page - DONE
     Account details page
 
 PHP login/sign-out session - DONE
@@ -20,6 +20,6 @@ JS/PHP for:
     Join status page - DONE
     Group chores overview page - DONE
     User chores overview page - DONE
-    Moderator manage chores page
-    Moderator manage group page
+    Moderator manage chores page 
+    Moderator manage group page - DONE
     Account details page

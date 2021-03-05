@@ -32,6 +32,7 @@ Get invite code
 Remove user from group
 Accept request to join group
 Promote another user to moderator
+Rename Group
 
 Account details page:
 Show current details - options to change:

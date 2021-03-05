@@ -5,6 +5,11 @@ require_login();
 require_group();
 require_no_joining_status();
 
+if (!is_mod()){
+    header("Location: chore.php");
+    exit();
+}
+
 $connection = new Database();
 
 $stmt = $connection->prepare("SELECT gname FROM ChoreGroup WHERE ID=:gid");
@@ -25,12 +30,7 @@ $gname = $results->fetchArray(SQLITE3_ASSOC)['gname'];
     <body>
         <?php
         $active=3;
-        if (is_mod()){
-            include ("./php/navbar-internal-mod.php");
-        }
-        else{
-            include ("./php/navbar-internal-standard.php");
-        }
+        include ("./php/navbar-internal-mod.php");
         ?>
         <div class="center-box" style="padding:0;">
             <div id="user-modal" class="modal hidden">
@@ -96,6 +96,7 @@ $gname = $results->fetchArray(SQLITE3_ASSOC)['gname'];
                             <col style="width: 40%;">
                             <col style="width: 20%;">
                         </colgroup>
+                        <tbody>
                         <?php
                         $stmt = $connection->prepare("SELECT ID, displayname FROM User Where GroupID=:gid");
                         $stmt->bindValue(":gid", $_SESSION['gid'], SQLITE3_INTEGER);
@@ -124,6 +125,7 @@ $gname = $results->fetchArray(SQLITE3_ASSOC)['gname'];
                             </td></tr>');
                         }
                         ?>
+                        </tbody>
                     </table>
                 </div>
             </div>
