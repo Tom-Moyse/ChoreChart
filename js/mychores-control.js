@@ -5,7 +5,7 @@ var target;
 
 
 $(function(){
-    $('.chore-element').on('click', function(e){
+    $("#chore-container").on('click', '.chores table tbody tr td ul .chore-element', function(e){
         target = $(e.target);
 
         $("#chore-modal").removeClass("hidden")
