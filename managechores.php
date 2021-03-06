@@ -46,8 +46,8 @@ $gname = $results->fetchArray(SQLITE3_ASSOC)['gname'];
                             </colgroup>
                             <tbody>
                                 <tr>
-                                    <td><label id="er-chore" for="contents">Chore:</label></td>
-                                    <td><input type="text" name="contents" value="Current chore contents"></td>
+                                    <td><label for="contents">Chore:</label></td>
+                                    <td><input id="er-chore" type="text" name="contents" value="Current chore contents"></td>
                                 </tr>
                                 <tr>
                                     <td><label for="fixed">Auto Choreholder:</label></td>
@@ -72,15 +72,15 @@ $gname = $results->fetchArray(SQLITE3_ASSOC)['gname'];
                                     <td><label for="startdate">Start date:</label></td>
                                     <td><input id="er-date" type="datetime-local" name="startdate"></td>
                                 </tr>
-                                <tr>
+                                <tr id="er-frequency">
                                     <td><label for="frequency">Repeat every:</label></td>
                                     <td>
                                         <input id="er-fnum" type="number" name="frequency" class="half-width">
                                         <select id="er-fval" name="interval" class="half-width">
-                                            <option value="day">Day(s)</option>
-                                            <option value="week">Week(s)</option>
+                                            <option value="days">Day(s)</option>
+                                            <option value="weeks">Week(s)</option>
                                             <option value="month">Month(s)</option>
-                                            <option value="year">Year(s)</option>
+                                            <option value="years">Year(s)</option>
                                         </select>
                                     </td>
                                 </tr>
@@ -110,9 +110,9 @@ $gname = $results->fetchArray(SQLITE3_ASSOC)['gname'];
                                     <td><label for="fixed">Auto Choreholder:</label></td>
                                     <td><input id="cr-check" type="checkbox" name="fixed" checked></td>
                                 </tr>
-                                <tr>
+                                <tr id="cr-chorehold" class="hidden">
                                     <td><label for="choreholder">Choreholder:</label></td>
-                                    <td id="cr-chorehold" class="hidden">
+                                    <td>
                                         <select name="choreholder">
                                             <?php
                                             $stmt = $connection->prepare("SELECT ID,displayname FROM User WHERE GroupID=:gid");
@@ -134,10 +134,10 @@ $gname = $results->fetchArray(SQLITE3_ASSOC)['gname'];
                                     <td>
                                         <input id="cr-fnum" type="number" name="frequency" class="half-width">
                                         <select id="cr-fval" name="interval" class="half-width">
-                                            <option value="day">Day(s)</option>
-                                            <option value="week">Week(s)</option>
-                                            <option value="month">Month(s)</option>
-                                            <option value="year">Year(s)</option>
+                                            <option value="days">Day(s)</option>
+                                            <option value="weeks">Week(s)</option>
+                                            <option value="months">Month(s)</option>
+                                            <option value="years">Year(s)</option>
                                         </select>
                                     </td>
                                 </tr>
@@ -188,17 +188,17 @@ $gname = $results->fetchArray(SQLITE3_ASSOC)['gname'];
                                 </tr>
                                 <tr>
                                     <td><label for="repeats">Repeats: </label></td>
-                                    <td><input type="checkbox" name="repeats"></td>
+                                    <td><input id="es-repeats" type="checkbox" name="repeats"></td>
                                 </tr>
-                                <tr>
+                                <tr id="es-frequency" class="hidden">
                                     <td><label for="frequency">Repeat every:</label></td>
                                     <td>
                                         <input id="es-fnum" type="number" name="frequency" class="half-width">
                                         <select name="interval" class="half-width">
-                                            <option value="day">Day(s)</option>
-                                            <option value="week">Week(s)</option>
-                                            <option value="month">Month(s)</option>
-                                            <option value="year">Year(s)</option>
+                                            <option value="days">Day(s)</option>
+                                            <option value="weeks">Week(s)</option>
+                                            <option value="months">Month(s)</option>
+                                            <option value="years">Year(s)</option>
                                         </select>
                                     </td>
                                 </tr>       
@@ -245,7 +245,7 @@ $gname = $results->fetchArray(SQLITE3_ASSOC)['gname'];
                                 </tr>
                                 <tr>
                                     <td><label for="date">Date:</label></td>
-                                    <td><input type="datetime-local" name="date" id="cs-date"></td>
+                                    <td><input type="datetime-local" name="date" id="cs-date" placeholder="mm/dd/yyyy --:--"></td>
                                 </tr>      
                             </tbody>
                         </table>
@@ -258,20 +258,25 @@ $gname = $results->fetchArray(SQLITE3_ASSOC)['gname'];
             <div class="left-div">
                 <h4>Past Chores</h4>
                 <div class="div-content">
+                    <p id="no-past-chores">No past chores found</p>
                     <table>
                         <colgroup>
                             <col>
                             <col style="width: 35px;">
                         </colgroup>
                         <tbody id="prev-chores">
-                            <tr data-choreid="">
-                                <td>Walking the dog</td>
-                                <td class="other-circle-button delete-button"><a>🗑️</a></td>
-                            </tr>
-                            <tr data-choreid="">
-                                <td>Going food shopping</td>
-                                <td class="other-circle-button delete-button"><a>🗑️</a></td>
-                            </tr>
+                            <?php
+                            $stmt = $connection->prepare("SELECT ID, contents FROM Chore WHERE repeats=0 
+                                AND GroupID=:gid AND julianday(date('now')) > julianday(lastchoreitemdate)");
+                            $stmt->bindValue(':gid', $_SESSION['gid'], SQLITE3_INTEGER);
+                            $results = $stmt->execute();
+                            while ($res = $results->fetchArray(SQLITE3_ASSOC)){
+                                echo ('<tr data-choreid="'.$res['ID'].'">
+                                    <td>'.$res['contents'].'</td>
+                                    <td class="other-circle-button delete-button"><a>🗑️</a></td>
+                                </tr>');
+                            }
+                            ?>
                         </tbody>
                     </table>
                 </div>
@@ -279,6 +284,7 @@ $gname = $results->fetchArray(SQLITE3_ASSOC)['gname'];
             <div class="mid-div">
                 <h4>Repeating Chores</h4>
                 <div class="div-content">
+                    <p id="no-repeating-chores">No repeating chores found</p>
                     <table>
                         <colgroup>
                             <col>
@@ -286,16 +292,19 @@ $gname = $results->fetchArray(SQLITE3_ASSOC)['gname'];
                             <col style="width: 35px;">
                         </colgroup>
                         <tbody id="repeating-chores">
-                            <tr data-choreid="">
-                                <td>Walking the dog</td>
-                                <td class="other-circle-button edit-button"><a>🖊️</a></td>
-                                <td class="other-circle-button delete-button"><a>🗑️</a></td>
-                            </tr>
-                            <tr data-choreid="">
-                                <td>Going food shopping</td>
-                                <td class="other-circle-button edit-button"><a>🖊️</a></td>
-                                <td class="other-circle-button delete-button"><a>🗑️</a></td>
-                            </tr>
+                            <?php
+                            $stmt = $connection->prepare("SELECT ID, contents FROM Chore WHERE repeats=1 
+                                AND GroupID=:gid");
+                            $stmt->bindValue(':gid', $_SESSION['gid'], SQLITE3_INTEGER);
+                            $results = $stmt->execute();
+                            while ($res = $results->fetchArray(SQLITE3_ASSOC)){
+                                echo ('<tr data-choreid="'.$res['ID'].'">
+                                    <td>'.$res['contents'].'</td>
+                                    <td class="other-circle-button edit-button"><a>🖊️</a></td>
+                                    <td class="other-circle-button delete-button"><a>🗑️</a></td>
+                                </tr>');
+                            }
+                            ?>
                         </tbody>
                     </table>
                 </div>
@@ -304,6 +313,7 @@ $gname = $results->fetchArray(SQLITE3_ASSOC)['gname'];
             <div class="right-div">
                 <h4>One-off Chores</h4>
                 <div class="div-content">
+                    <p id="no-single-chores">No one-off chores found</p>
                     <table>
                         <colgroup>
                             <col>
@@ -311,16 +321,19 @@ $gname = $results->fetchArray(SQLITE3_ASSOC)['gname'];
                             <col style="width: 35px;">
                         </colgroup>
                         <tbody id="single-chores">
-                            <tr data-choreid="7">
-                                <td>Walking the dog</td>
-                                <td class="other-circle-button edit-button"><a>🖊️</a></td>
-                                <td class="other-circle-button delete-button"><a>🗑️</a></td>
-                            </tr>
-                            <tr data-choreid="4">
-                                <td>Going food shopping</td>
-                                <td class="other-circle-button edit-button"><a>🖊️</a></td>
-                                <td class="other-circle-button delete-button"><a>🗑️</a></td>
-                            </tr>
+                            <?php
+                            $stmt = $connection->prepare("SELECT ID, contents FROM Chore WHERE repeats=0 
+                                AND GroupID=:gid AND julianday(date('now')) <= julianday(lastchoreitemdate)");
+                            $stmt->bindValue(':gid', $_SESSION['gid'], SQLITE3_INTEGER);
+                            $results = $stmt->execute();
+                            while ($res = $results->fetchArray(SQLITE3_ASSOC)){
+                                echo ('<tr data-choreid="'.$res['ID'].'">
+                                    <td>'.$res['contents'].'</td>
+                                    <td class="other-circle-button edit-button"><a>🖊️</a></td>
+                                    <td class="other-circle-button delete-button"><a>🗑️</a></td>
+                                </tr>');
+                            }
+                            ?>
                         </tbody>
                     </table>
                 </div> 

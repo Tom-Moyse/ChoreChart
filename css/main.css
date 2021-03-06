@@ -207,6 +207,7 @@ form input[type="text"], form input[type="password"]{
     padding: 15px 32px;
     border-radius: 3px;
     background-color: #6080d0;
+    width:-moz-fit-content;
     width:fit-content;
 }
 

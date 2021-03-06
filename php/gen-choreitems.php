@@ -34,20 +34,35 @@ while($res = $results->fetchArray(SQLITE3_ASSOC)){
             $stmt->bindValue(':id', $res['UserID'], SQLITE3_INTEGER);
         }
         else{
-            // Assign to user with current equal least amount of current chores
-            $substmt = $connection->prepare("SELECT ID FROM (SELECT COUNT(User.ID), User.GroupID, User.ID
-            FROM User INNER JOIN ChoreItem ON ChoreItem.UserID=User.ID GROUP BY ChoreItem.UserID 
-            ORDER BY COUNT(User.ID) ASC) 
+            // Calculate user to assign chore item to
+            // Selects user with 0 chore items (if any)
+            $substmt = $connection->prepare("SELECT ID FROM User EXCEPT SELECT ID FROM 
+            (SELECT COUNT(User.ID), User.GroupID, User.ID FROM User INNER JOIN ChoreItem ON
+            ChoreItem.UserID=User.ID GROUP BY ChoreItem.UserID ORDER BY COUNT(User.ID) ASC) 
             WHERE GroupID=:gid");
             $substmt->bindValue(':gid', $_SESSION['gid'], SQLITE3_INTEGER);
             $subresults = $substmt->execute();
             $subres = $subresults->fetchArray(SQLITE3_ASSOC);
             if ($subres == false){
-                $stmt->bindValue(':id', $_SESSION['uid'], SQLITE3_INTEGER);
+                // Selects user with least chore items (must have at least 1)
+                $substmt = $connection->prepare("SELECT ID FROM (SELECT COUNT(User.ID), User.GroupID, User.ID
+                FROM User INNER JOIN ChoreItem ON ChoreItem.UserID=User.ID GROUP BY ChoreItem.UserID 
+                ORDER BY COUNT(User.ID) ASC) 
+                WHERE GroupID=:gid");
+                $substmt->bindValue(':gid', $_SESSION['gid'], SQLITE3_INTEGER);
+                $subresults = $substmt->execute();
+                $subres = $subresults->fetchArray(SQLITE3_ASSOC);
+                if ($subres == false){
+                    $stmt->bindValue(':id', $_SESSION['uid'], SQLITE3_INTEGER);
+                }
+                else{
+                    $stmt->bindValue(':id', $subres['ID'], SQLITE3_INTEGER);
+                }
             }
             else{
                 $stmt->bindValue(':id', $subres['ID'], SQLITE3_INTEGER);
             }
+            
         }
         // Execute insert
         $stmt->execute();
