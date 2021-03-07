@@ -80,6 +80,15 @@ $res = $result->fetchArray(SQLITE3_ASSOC);
                     <a class="button" id="confirm-leave">Confirm</a>
                 </div>
             </div>
+            <div id="upload-image-modal" class="modal hidden">
+                <div class="modal-content animate">
+                    <h4 class="modal-title">Upload profile picture</h4>
+                    <input style="padding:30px" type="file" id="avatar" name="avatar" accept="image/jpeg">
+                    <p id="fmissing" class="warning hidden">Must select a jpeg file</p>
+                    <p id="fsize" class="warning hidden">File size must be below 500kB</p>
+                    <a class="button" id="confirm-upload">Confirm</a>
+                </div>
+            </div>
             <h3>Account Details</h3>
             <div class="focus-container">
                 <div style="width:100%">

@@ -18,6 +18,16 @@ $(function(){
         e.stopPropagation();
     });
 
+    $("#user-img").on('click', function(e){
+        $("#upload-image-modal").removeClass('hidden');
+        e.stopPropagation();
+
+        $("#confirm-upload").one('click', function(e){
+            handleUpload();
+            e.stopPropagation();
+        });
+    });
+
     $("#leave-group").on('click', function(e){
         $("#leave-confirm-modal").removeClass('hidden');
         e.stopPropagation();
@@ -37,10 +47,7 @@ $(function(){
             return;
         }
 
-        $("#edit-displayname-modal").addClass('hidden');
-        $("#edit-email-modal").addClass('hidden');
-        $("#edit-password-modal").addClass('hidden');
-        $("#leave-confirm-modal").addClass('hidden');
+        $(".modal").addClass('hidden');
         $(".warning").addClass('hidden');
         $("#displayname-form").trigger('reset');
         $("#email-form").trigger('reset');
@@ -169,4 +176,59 @@ function changePassword(){
         }
     });
     return false;
+}
+
+function handleUpload(){
+    if ($("#avatar").get(0).files.length === 0){
+        $("#fmissing").removeClass('hidden');
+        return;
+    }
+    else{
+        $("#fmissing").addClass('hidden');
+    }
+    if ($("#avatar").get(0).files[0].size > 500000){
+        $("#fsize").removeClass('hidden');
+        return;
+    }
+    else{
+        $("#fsize").addClass('hidden');
+    }
+
+
+    var filename = $("#avatar").val();
+    var ext = filename.split('.').pop().toLowerCase();
+    if (ext != "jpg" && ext != "jpeg"){
+        $("#fmissing").removeClass('hidden');
+        return;
+    }
+    else{
+        $("#fmissing").addClass('hidden');
+    }
+
+    var file_data = $('#avatar').prop('files')[0];
+    var form_data = new FormData();
+    form_data.append('file', file_data);
+
+    $.ajax({
+        url: "php/uploadimg.php",
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success:function(data){
+            alert(data);
+            var result = $.parseJSON(data);
+            console.log("File uploaded");
+            if (result[0] == "0"){
+                $('#avatar').attr('src', result[1]);
+            }
+            else{
+                alert("Error uploading file, please try again later");
+            }
+        },
+        error:function(response){
+            alert(response);
+            console.log("File not uploaded")
+        }
+    });
 }

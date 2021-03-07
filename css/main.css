@@ -680,3 +680,7 @@ form input[type="text"], form input[type="password"], form input[type="email"]{
 .modal-title{
     padding-top: 10px;
 }
+
+#user-img{
+    cursor: pointer;
+}
