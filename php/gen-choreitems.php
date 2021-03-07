@@ -18,11 +18,12 @@ $stmt->bindValue(':gendate', $_POST['date'], SQLITE3_TEXT);
 $results = $stmt->execute();
 $inserts_occured = false;
 
+$end_datestamp = strtotime($_POST['date']." +10 days");
 // Loop through each chore that needs new chore items generating
 while($res = $results->fetchArray(SQLITE3_ASSOC)){
     // For each chore, add chore items until required number of items added
     $new_datestamp = strtotime($res['lastchoreitemdate'] . $res['interval']);
-    while ($new_datestamp < strtotime($_POST['date'])){
+    while ($new_datestamp < $end_datestamp){
         $inserts_occured = true;
         // Insert new chore item
         $stmt = $connection->prepare("INSERT INTO ChoreItem VALUES (NULL, :con, 0, :dea, :cid, :id)");

@@ -37,23 +37,6 @@ $(function(){
     $('#right-scroll').on('click', doRightScroll);
 });
 
-function updateChoreItems(){
-    $.ajax({
-        url:'./php/gen-choreitems.php',
-        type:'post',
-        data:{date: rightDate.toJSON().slice(0,10)},
-        success:function(response){
-            if (response == "0"){
-                console.log("Update items successfully");
-            }
-            else{
-                alert(response);
-                console.log("Update items failed");
-            }
-        }
-    })
-}
-
 function doLeftScroll(){
     rightDate.setDate(rightDate.getDate() - 10);
     var newLeftDate = new Date(rightDate);
@@ -74,26 +57,38 @@ function doLeftScroll(){
 }
 
 function doRightScroll(){
-    // Update chore items if highest date checked on current page visit
-    rightDate.setDate(rightDate.getDate() + 10);
-    if (rightDate.getTime() > latestDate.getTime()){
-        updateChoreItems();
-        latestDate.setDate(rightDate.getDate());
-    }
-    console.log(rightDate.toJSON().slice(0,10));
-
     var rightContent = $('#right-chores').html();
     var midContent = $('#mid-chores').html();
 
     $('#mid-chores').html(rightContent);
     $('#left-chores').html(midContent);
 
-    $.ajax({
-        url:'./php/get-choreitems.php',
-        type:'post',
-        data:{date: rightDate.toJSON().slice(0,10)},
-        success:function(html){
-            $("#right-chores").html(html);
-        }
-    });
+    // Update chore items if highest date checked on current page visit
+    rightDate.setDate(rightDate.getDate() + 10);
+    console.log(rightDate);
+    console.log(latestDate);
+    if (rightDate > latestDate){
+        $.ajax({
+            url:'./php/gen-choreitems.php',
+            type:'post',
+            data:{date: rightDate.toJSON().slice(0,10)},
+            success:function(response){
+                if (response == "0"){
+                    $.ajax({
+                        url:'./php/get-choreitems.php',
+                        type:'post',
+                        data:{date: rightDate.toJSON().slice(0,10)},
+                        success:function(html){
+                            $("#right-chores").html(html);
+                        }
+                    });
+                }
+                else{
+                    alert(response);
+                }
+            }
+        })
+        latestDate.setDate(rightDate.getDate());
+    }
+    
 }
