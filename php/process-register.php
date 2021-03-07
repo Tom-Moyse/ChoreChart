@@ -35,7 +35,7 @@ if (filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)){
     $results = $stmt->execute();
 
     if ($results->fetchArray(SQLITE3_ASSOC) != null){
-        echo 2;
+        echo 1;
         exit();
     }
 }

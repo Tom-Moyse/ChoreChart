@@ -79,7 +79,7 @@ form input{
     width: 80%;
 }
 
-form input[type="text"], form input[type="password"]{
+form input[type="text"], form input[type="password"], form input[type="email"]{
     text-align: left;
     padding-left: 10px;
 }
@@ -658,4 +658,25 @@ form input[type="text"], form input[type="password"]{
 
 .half-width{
     width: 45% !important;
+}
+
+#user-details{
+    margin: auto;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#user-details tr td{
+    text-align: left;
+    padding-left: 10px;
+    padding-bottom: 15px;
+}
+
+#user-details tr td:first-child{
+    text-align: right;
+    font-weight: 400;
+}
+
+.modal-title{
+    padding-top: 10px;
 }

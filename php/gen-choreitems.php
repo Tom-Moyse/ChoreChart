@@ -36,8 +36,8 @@ while($res = $results->fetchArray(SQLITE3_ASSOC)){
         else{
             // Calculate user to assign chore item to
             // Selects user with 0 chore items (if any)
-            $substmt = $connection->prepare("SELECT ID FROM User EXCEPT SELECT ID FROM 
-            (SELECT COUNT(User.ID), User.GroupID, User.ID FROM User INNER JOIN ChoreItem ON
+            $substmt = $connection->prepare("SELECT ID FROM User WHERE GroupID=:gid EXCEPT SELECT ID
+            FROM (SELECT COUNT(User.ID), User.GroupID, User.ID FROM User INNER JOIN ChoreItem ON
             ChoreItem.UserID=User.ID GROUP BY ChoreItem.UserID ORDER BY COUNT(User.ID) ASC) 
             WHERE GroupID=:gid");
             $substmt->bindValue(':gid', $_SESSION['gid'], SQLITE3_INTEGER);

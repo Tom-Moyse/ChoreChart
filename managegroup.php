@@ -38,7 +38,7 @@ $gname = $results->fetchArray(SQLITE3_ASSOC)['gname'];
                     <div style="width:100%">
                         <img id="user-img" class="big-pic" src="img/usr/default.png" alt="Profile Picture">
                     </div>
-                    <table id="user-info">
+                    <table id="user-details">
                         <tr>
                             <td>Name:</td>
                             <td id="user-name"></td>
@@ -69,19 +69,19 @@ $gname = $results->fetchArray(SQLITE3_ASSOC)['gname'];
                 </div>
             </div>
             <div id="edit-name-modal" class="modal hidden">
-            <div class="modal-content animate">
-                <h3>Rename Group</h3>
-                <form id="name-form">
-                    <label for="group" class="hide-element"><?php echo $gname;?></label>
-                    <input type="text" name="group" value="<?php echo $gname;?>">
-                    <input type="hidden" name="gid" value="<?php echo $_SESSION['gid'];?>">
-                    <p id="nmissing" class="warning hidden">Name Required</p><br>
-                    <p id="ninvalid" class="warning hidden">Name contains invalid characters.</p><br>
+                <div class="modal-content animate">
+                    <h3>Rename Group</h3>
+                    <form id="name-form">
+                        <label for="group" class="hide-element"><?php echo $gname;?></label>
+                        <input type="text" name="group" value="<?php echo $gname;?>">
+                        <input type="hidden" name="gid" value="<?php echo $_SESSION['gid'];?>">
+                        <p id="nmissing" class="warning hidden">Name Required</p><br>
+                        <p id="ninvalid" class="warning hidden">Name contains invalid characters.</p><br>
 
-                    <input type="submit" value="Submit">
-                </form>
+                        <input type="submit" value="Submit">
+                    </form>
+                </div>
             </div>
-        </div>
             <div id="title-container">
                 <h3><?php echo $gname;?></h3>
                 <a id="edit-name">✏️</a>

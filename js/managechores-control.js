@@ -126,7 +126,7 @@ function editSingle(e){
         }
     });
 
-    $("#edit-single-chore").on('click', function(){
+    $("#edit-single-chore").one('click', function(){
         $(".chore-error").addClass("hidden");
         $(".date-error").addClass("hidden");
         $(".frequency-error").addClass("hidden");
@@ -244,7 +244,7 @@ function editRepeating(e){
         }
     });
 
-    $("#edit-repeating-chore").on('click', function(){
+    $("#edit-repeating-chore").one('click', function(){
         $(".chore-error").addClass("hidden");
         $(".date-error").addClass("hidden");
         $(".frequency-error").addClass("hidden");
@@ -296,7 +296,7 @@ function editRepeating(e){
 }
 
 function createSingle(e){
-    $("#add-single-chore").on('click', function(){
+    $("#add-single-chore").one('click', function(){
         $(".chore-error").addClass("hidden");
         $(".date-error").addClass("hidden");
         var error = false;
@@ -339,7 +339,7 @@ function createSingle(e){
 }
 
 function createRepeating(e){
-    $("#add-repeating-chore").on('click', function(){
+    $("#add-repeating-chore").one('click', function(){
         $(".chore-error").addClass("hidden");
         $(".date-error").addClass("hidden");
         $(".frequency-error").addClass("hidden");

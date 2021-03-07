@@ -20,6 +20,10 @@ JS/PHP for:
     Join status page - DONE
     Group chores overview page - DONE
     User chores overview page - DONE
-    Moderator manage chores page 
+    Moderator manage chores page - DONE
     Moderator manage group page - DONE
     Account details page
+
+Other:
+    Improve remove from group to update respected chores
+    Fix bug with chore items not generating/showing properly
