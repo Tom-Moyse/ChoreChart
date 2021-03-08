@@ -5,7 +5,7 @@ if (!isset($_SESSION)){
     session_start();
 }
 
-$target_file = ROOT . "/img/usr/" . $_SESSION['uid'].'.jpeg';
+$target_file = "../img/usr/" . $_SESSION['uid'].'.jpeg';
 $uploadOk = 0;
 $imageFileType = strtolower(pathinfo(basename($_FILES["file"]["name"]),PATHINFO_EXTENSION));
 
@@ -31,5 +31,5 @@ if ($uploadOk == 0) {
     } 
 }
 
-echo json_encode([$uploadOk, "img/usr/" . $_SESSION['uid'].'jpeg']);
+echo json_encode([$uploadOk, "img/usr/" . $_SESSION['uid'].'.jpeg']);
 ?>

@@ -1,7 +1,6 @@
 <?php
 include('main.php');
 end_session();
-echo exec('whoami');
 ?>
 <!DOCTYPE html>
 <html lang="en">

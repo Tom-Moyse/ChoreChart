@@ -279,7 +279,7 @@ while($res = $results->fetchArray(SQLITE3_ASSOC)){
                                 echo ('<td></td>');
                             }
                             if (file_exists(ROOT."/img/usr/".$member['ID'].".jpeg")){
-                                echo ('<td><img src="img/usr/'.$member['ID'].'.jpeg" alt="Profile Picture"></td>');
+                                echo ('<td><img src="img/usr/'.$member['ID'].'.jpeg" alt="Profile Picture" class="thumbnail"></td>');
                             }
                             else{
                                 echo ('<td><img src="img/usr/default.png" alt="Profile Picture"></td>');

@@ -408,8 +408,10 @@ form input[type="text"], form input[type="password"], form input[type="email"]{
 }
 
 .big-pic{
-    width: 20%;
+    width: 160px;
+    height: 160px;
     border-radius: 50%;
+    object-fit: cover;
     margin: 10px 0 10px 0;
 }
 
@@ -684,3 +686,10 @@ form input[type="text"], form input[type="password"], form input[type="email"]{
 #user-img{
     cursor: pointer;
 }
+
+.thumbnail {
+    object-fit: cover;
+    width:40px;
+    height:40px;
+}
+

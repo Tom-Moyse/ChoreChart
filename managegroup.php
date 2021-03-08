@@ -110,7 +110,7 @@ $gname = $results->fetchArray(SQLITE3_ASSOC)['gname'];
                                 echo ('<td></td>');
                             }
                             if (file_exists(ROOT."/img/usr/".$res['ID'].".jpeg")){
-                                echo ('<td><img src="img/usr/'.$res['ID'].'.jpeg" alt="Profile Picture"></td>');
+                                echo ('<td><img src="img/usr/'.$res['ID'].'.jpeg" alt="Profile Picture" class="thumbnail"></td>');
                             }
                             else{
                                 echo ('<td><img src="img/usr/default.png" alt="Profile Picture"></td>');

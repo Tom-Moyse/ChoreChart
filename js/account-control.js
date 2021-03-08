@@ -216,11 +216,17 @@ function handleUpload(){
         data: form_data,
         type: 'post',
         success:function(data){
-            alert(data);
             var result = $.parseJSON(data);
-            console.log("File uploaded");
-            if (result[0] == "0"){
-                $('#avatar').attr('src', result[1]);
+            if (result[0] == 0){
+                console.log("YO");
+                var d = new Date();
+                if ($('#user-img').attr('src') != "img/usr/default.png"){
+                    $('#user-img').attr('src', $('#user-img').attr('src')+"?"+d.getTime());
+                }
+                else{
+                    $('#user-img').attr('src',result[1])
+                }
+                $('.modal').addClass('hidden');
             }
             else{
                 alert("Error uploading file, please try again later");
