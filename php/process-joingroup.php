@@ -1,4 +1,5 @@
 <?php
+// File handles the creation of a join request wherin a user has entered a join code
 if ($_SERVER['REQUEST_METHOD'] != 'POST'){
     header("Location: register.php");
     exit();
@@ -37,6 +38,8 @@ $stmt = $connection->prepare("SELECT email FROM User WHERE GroupID=:id AND moder
 $stmt->bindValue(':id', $res['ID']);
 $result = $stmt->execute();
 
+// Sends an email to the moderators of the chore group informing them that a new join request has been
+// made (email includes basic relevant information e.g. requesters name)
 $header = 'From: noreply@chorechart.com';
 while ($res = $result->fetchArray(SQLITE3_ASSOC)){
     $message = "The user: ".$name." has requested to join the chore group. You should accept/decline the request so they aren't kept waiting!";

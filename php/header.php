@@ -1,4 +1,5 @@
 <?php
+// Template file for site pages that contains all consistent header information
     echo '
         <meta charset="utf-8">
         <link rel="stylesheet" href="css/main.css" type="text/css" charset="utf-8">

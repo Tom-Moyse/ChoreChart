@@ -1,4 +1,5 @@
 <?php
+// File handles user updating their email address
 if ($_SERVER['REQUEST_METHOD'] != 'POST'){
     header("Location: ./signout.php");
     exit();
@@ -29,6 +30,7 @@ else{
     exit();
 }
 
+// Update email address stored in db table to match newly provided email address
 $stmt = $connection->prepare("UPDATE User SET email=:email WHERE ID=:id");
 $stmt->bindValue(':email', $_POST['email'], SQLITE3_TEXT);
 $stmt->bindValue(':id', $_SESSION['uid'], SQLITE3_INTEGER);

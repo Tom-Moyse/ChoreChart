@@ -1,4 +1,5 @@
 <?php
+// File handles process of editing a given repeating chore and updating fields as appropriate
 if ($_SERVER['REQUEST_METHOD'] != 'POST'){
     header("Location: ./signout.php");
     exit();
@@ -32,7 +33,7 @@ $stmt->bindValue(':ite', $interval, SQLITE3_TEXT);
 $stmt->bindValue(':id', $_POST['id'], SQLITE3_INTEGER);
 $stmt->execute();
 
-
+// If chore now has 'auto choreholder' update chore fields appropriately
 if (isset($_POST['fixed'])){
     $stmt = $connection->prepare("UPDATE Chore SET fixed=0, UserID=NULL WHERE ID=:id");
     $stmt->bindValue(':id', $_POST['id'], SQLITE3_INTEGER);

@@ -64,4 +64,8 @@ function is_user_mod($id){
 
     return ($res == 1);
 }
+
+function h($string){
+    return htmlspecialchars($string, ENT_QUOTES, 'utf-8');
+}
 ?>

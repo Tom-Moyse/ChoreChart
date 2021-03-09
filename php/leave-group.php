@@ -1,4 +1,6 @@
 <?php
+// File is called when user confirms they want to leave the group and handles updating their
+// user record appropriately as well as removing/updating all relevant chores/chore items
 if (!isset($_SESSION)){
     session_start();
 }

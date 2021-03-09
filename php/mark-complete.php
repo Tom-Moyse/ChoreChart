@@ -1,4 +1,6 @@
 <?php
+// Simple file that given a choreitem id and a completed status sets the database to match the
+// requested values
 if ($_SERVER['REQUEST_METHOD'] != 'POST'){
     header("Location: signout.php");
     exit();

@@ -1,4 +1,7 @@
 <?php
+// File takes a userid and subsequently returns all html required to display a member row within
+// the managegroup page, function same way as internal method but executed on post request
+// such that in case of new user joining group, row can be dynamically added via js/ajax
 if ($_SERVER['REQUEST_METHOD'] != 'POST'){
     header("Location: signout.php");
     exit();

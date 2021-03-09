@@ -1,4 +1,9 @@
 <?php
+// This file mirrors functionality of php at top of chores pages but is configured for a post request
+// such that additional choreitems can be generated when required
+
+// File given a start date generates all relevant chore items for the group for the next 10 days
+// and stores these choreitems withing the ChoreItem db table
 if ($_SERVER['REQUEST_METHOD'] != 'POST'){
     header("Location: signout.php");
     exit();
@@ -30,13 +35,13 @@ while($res = $results->fetchArray(SQLITE3_ASSOC)){
         $stmt->bindValue(':con', $res['contents'], SQLITE3_TEXT);
         $stmt->bindValue(':dea', date('Y-m-d H:i:s', $new_datestamp), SQLITE3_TEXT);
         $stmt->bindValue(':cid', $res['ID'], SQLITE3_INTEGER);
-        // Set user id either randomly or fixed
+        // If chore has a 'fixed' user (meaning not auto choreholder) set choreitem uid to match 
         if ($res['fixed'] == 1){
             $stmt->bindValue(':id', $res['UserID'], SQLITE3_INTEGER);
         }
+        // Otherwise calculate the user which the choreitem will be allocated to
         else{
-            // Calculate user to assign chore item to
-            // Selects user with 0 chore items (if any)
+            // First selects any users with 0 other chore items
             $substmt = $connection->prepare("SELECT ID FROM User WHERE GroupID=:gid EXCEPT SELECT ID
             FROM (SELECT COUNT(User.ID), User.GroupID, User.ID FROM User INNER JOIN ChoreItem ON
             ChoreItem.UserID=User.ID GROUP BY ChoreItem.UserID ORDER BY COUNT(User.ID) ASC) 
@@ -44,6 +49,7 @@ while($res = $results->fetchArray(SQLITE3_ASSOC)){
             $substmt->bindValue(':gid', $_SESSION['gid'], SQLITE3_INTEGER);
             $subresults = $substmt->execute();
             $subres = $subresults->fetchArray(SQLITE3_ASSOC);
+            // If no users had zero chore items
             if ($subres == false){
                 // Selects user with least chore items (must have at least 1)
                 $substmt = $connection->prepare("SELECT ID FROM (SELECT COUNT(User.ID), User.GroupID, User.ID
@@ -53,13 +59,16 @@ while($res = $results->fetchArray(SQLITE3_ASSOC)){
                 $substmt->bindValue(':gid', $_SESSION['gid'], SQLITE3_INTEGER);
                 $subresults = $substmt->execute();
                 $subres = $subresults->fetchArray(SQLITE3_ASSOC);
+                // If query fails to produce a result assign chore item to logged in user
                 if ($subres == false){
                     $stmt->bindValue(':id', $_SESSION['uid'], SQLITE3_INTEGER);
                 }
+                // Otherwise assign chore item to group member with least current amount of chore items
                 else{
                     $stmt->bindValue(':id', $subres['ID'], SQLITE3_INTEGER);
                 }
             }
+            // If their was at least one user with zero chore items, assign choreitem to said user
             else{
                 $stmt->bindValue(':id', $subres['ID'], SQLITE3_INTEGER);
             }

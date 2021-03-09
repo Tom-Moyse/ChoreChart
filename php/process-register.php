@@ -1,4 +1,6 @@
 <?php
+// File handles a new user registration and assuming all data is valid will add a new user to the
+// table as well as 'logging them in'
 if ($_SERVER['REQUEST_METHOD'] != 'POST'){
     header("Location: register.php");
     exit();
@@ -12,7 +14,7 @@ $connection = new Database();
 $userExpr = "/^[a-z0-9_-]+$/i";
 $passExpr = "/\s+/";
 $error = false;
-// Verify username
+// Verify username meets criteria
 if (preg_match($userExpr, $_POST['username'])){
     $stmt = $connection->prepare('SELECT ID FROM User WHERE username=:user');
     $stmt->bindValue(':user', $_POST['username'], SQLITE3_TEXT);
@@ -28,7 +30,7 @@ else{
     $error = true;
 }
 
-// Verify email
+// Verify email meets criteria
 if (filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)){
     $stmt = $connection->prepare('SELECT ID FROM User WHERE email=:em');
     $stmt->bindValue(':em', $_POST['email'], SQLITE3_TEXT);
@@ -43,7 +45,7 @@ else{
     $error = true;
 }
 
-// Verify password
+// Verify password meets criteria and they match
 if (!(strlen($_POST['password1']) < 8 || preg_match($passExpr, $_POST['password1']))){
     if ($_POST['password1'] == $_POST['password2']){
         $password = password_hash($_POST['password1'], PASSWORD_DEFAULT);

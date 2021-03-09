@@ -1,4 +1,5 @@
 <?php
+// File handles moderator renaming their group
 if ($_SERVER['REQUEST_METHOD'] != 'POST'){
     header("Location: register.php");
     exit();
@@ -19,6 +20,7 @@ if (!preg_match($nameExpr, $_POST['name'])){
     exit();
 }
 
+// Group name is updated in the db table
 $stmt = $connection->prepare("UPDATE ChoreGroup SET gname=:nam WHERE ID=:id");
 $stmt->bindValue(":nam", $_POST['name'], SQLITE3_TEXT);
 $stmt->bindValue(":id", $_POST['gid'], SQLITE3_INTEGER);

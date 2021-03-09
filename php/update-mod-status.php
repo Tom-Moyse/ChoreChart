@@ -1,4 +1,5 @@
 <?php
+// Basic file that given a user id via post will update the moderator status for the given user
 if ($_SERVER['REQUEST_METHOD'] != 'POST'){
     header("Location: signout.php");
     exit();

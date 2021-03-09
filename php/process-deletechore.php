@@ -1,4 +1,5 @@
 <?php
+// File handles deleting a chore with given id (based upon post request)
 if ($_SERVER['REQUEST_METHOD'] != 'POST'){
     header("Location: ./signout.php");
     exit();
@@ -28,9 +29,7 @@ if ($res['GroupID'] != $_SESSION['gid']){
     exit();
 }
 
-// Only delete future chores
-//$stmt = $connection->prepare("DELETE FROM ChoreItem WHERE ChoreID=:id AND julianday(deadline) > julianday(date('now'))");
-// Delete all chores
+// Delete chore and all associated chore items
 $stmt = $connection->prepare("DELETE FROM ChoreItem WHERE ChoreID=:id");
 $stmt->bindValue(':id', $_POST['id'], SQLITE3_INTEGER);
 $stmt->execute();

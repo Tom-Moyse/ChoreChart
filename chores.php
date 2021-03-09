@@ -5,6 +5,9 @@ require_login();
 require_group();
 require_no_joining_status();
 
+// On page load request all required choreitems for the next 20 days are computed
+// and added to the chore item database.
+
 // Send first item generation request via internal php (as to subsequently ajax)
 $date = date('Y-m-d H:i:s' ,strtotime("+ 20 days", strtotime(date('Y-m-d H:i:s'))));
 $connection = new Database();
@@ -28,13 +31,13 @@ while($res = $results->fetchArray(SQLITE3_ASSOC)){
         $stmt->bindValue(':con', $res['contents'], SQLITE3_TEXT);
         $stmt->bindValue(':dea', date('Y-m-d H:i:s', $new_datestamp), SQLITE3_TEXT);
         $stmt->bindValue(':cid', $res['ID'], SQLITE3_INTEGER);
-        // Set user id either randomly or fixed
+        // If chore has a 'fixed' user (meaning not auto choreholder) set choreitem uid to match 
         if ($res['fixed'] == 1){
             $stmt->bindValue(':id', $res['UserID'], SQLITE3_INTEGER);
         }
+        // Otherwise calculate the user which the choreitem will be allocated to
         else{
-            // Calculate user to assign chore item to
-            // Selects user with 0 chore items (if any)
+            // First selects any users with 0 other chore items
             $substmt = $connection->prepare("SELECT ID FROM User WHERE GroupID=:gid EXCEPT SELECT ID
             FROM (SELECT COUNT(User.ID), User.GroupID, User.ID FROM User INNER JOIN ChoreItem ON
             ChoreItem.UserID=User.ID GROUP BY ChoreItem.UserID ORDER BY COUNT(User.ID) ASC) 
@@ -42,6 +45,7 @@ while($res = $results->fetchArray(SQLITE3_ASSOC)){
             $substmt->bindValue(':gid', $_SESSION['gid'], SQLITE3_INTEGER);
             $subresults = $substmt->execute();
             $subres = $subresults->fetchArray(SQLITE3_ASSOC);
+            // If no users had zero chore items
             if ($subres == false){
                 // Selects user with least chore items (must have at least 1)
                 $substmt = $connection->prepare("SELECT ID FROM (SELECT COUNT(User.ID), User.GroupID, User.ID
@@ -51,13 +55,16 @@ while($res = $results->fetchArray(SQLITE3_ASSOC)){
                 $substmt->bindValue(':gid', $_SESSION['gid'], SQLITE3_INTEGER);
                 $subresults = $substmt->execute();
                 $subres = $subresults->fetchArray(SQLITE3_ASSOC);
+                // If query fails to produce a result assign chore item to logged in user
                 if ($subres == false){
                     $stmt->bindValue(':id', $_SESSION['uid'], SQLITE3_INTEGER);
                 }
+                // Otherwise assign chore item to group member with least current amount of chore items
                 else{
                     $stmt->bindValue(':id', $subres['ID'], SQLITE3_INTEGER);
                 }
             }
+            // If their was at least one user with zero chore items, assign choreitem to said user
             else{
                 $stmt->bindValue(':id', $subres['ID'], SQLITE3_INTEGER);
             }
@@ -132,10 +139,11 @@ while($res = $results->fetchArray(SQLITE3_ASSOC)){
             <div id="title-container">
                 <h3>
                 <?php
-                    $stmt = $connection->prepare("SELECT gname FROM ChoreGroup WHERE ID=:gid");
-                    $stmt->bindValue(':gid', $_SESSION['gid'], SQLITE3_INTEGER);
-                    $results = $stmt->execute();
-                    echo ($results->fetchArray(SQLITE3_ASSOC)['gname']);
+                // Retrieve group name from database using session groupid
+                $stmt = $connection->prepare("SELECT gname FROM ChoreGroup WHERE ID=:gid");
+                $stmt->bindValue(':gid', $_SESSION['gid'], SQLITE3_INTEGER);
+                $results = $stmt->execute();
+                    echo h($results->fetchArray(SQLITE3_ASSOC)['gname']);
                 ?>
                 </h3>
             </div> 
@@ -151,9 +159,13 @@ while($res = $results->fetchArray(SQLITE3_ASSOC)){
                         }
                         return substr($input, 0, 12).'...';
                     }
-
+                    // Function generates the table for all chore items for a given group between 
+                    // two given dates, also takes a $show parameter to set whether table is hidden
+                    // or not
                     function genTable($date1, $date2, $show, $id){
                         $connection = new Database();
+                        // Relevant information is queried for each choreitem, and all choreitems
+                        // associated with the given group between the two given dates are selected
                         $query = 'SELECT ChoreItem.contents, ChoreItem.completed, ChoreItem.deadline,
                             User.displayname FROM ChoreItem INNER JOIN User ON ChoreItem.UserID =
                             User.ID WHERE User.GroupID = :gid AND ChoreItem.deadline BETWEEN :d1 AND :d2
@@ -170,9 +182,12 @@ while($res = $results->fetchArray(SQLITE3_ASSOC)){
                         $date = date('d/m/Y', strtotime("+ ".$counter." days", strtotime($curr_date)));
                         $first = true;
                         $ran = false;
+                        // Each chore item in the group is iterated over
                         while ($res= $page_prev_results->fetchArray(SQLITE3_ASSOC)){
                             $ran = true;
                             // Check if current chore is on a new day to previous (keep track of days)
+                            // If so move onto next table cell until chore item found or ten cells
+                            // have been generated
                             while (strtotime($res['deadline']) >= strtotime("+ ".$counter." days", strtotime($curr_date))){
                                 $date = date('d/m/Y', strtotime("+ ".$counter." days", strtotime($curr_date)));
                                 
@@ -200,15 +215,18 @@ while($res = $results->fetchArray(SQLITE3_ASSOC)){
                             $date_no_seconds = date("d/m/Y H:i", strtotime($res['deadline']));
                             // Output html relevant to current chore
                             $data_info = 'data-contents="'.$res['contents'].'" data-deadline="'.
-                                        $date_no_seconds.'" data-choreholder="'.$res['displayname'].'"';
+                                $date_no_seconds.'" data-choreholder="'.$res['displayname'].'"';
+                            // Chore item is added to current table cell
                             if ($res['completed'] == 0){
-                                echo ('<li class="chore-element" '.$data_info.'>'.shorten($res['contents']).'</li>');
+                                echo ('<li class="chore-element" '.$data_info.'>'.h(shorten($res['contents'])).'</li>');
                             }
                             else{
-                                echo ('<li class="chore-element complete" '.$data_info.'>'.shorten($res['contents']).'</li>');
+                                echo ('<li class="chore-element complete" '.$data_info.'>'.h(shorten($res['contents'])).'</li>');
                             }
                             
                         }
+                        // If all choreitems were added before last table cell added, add remaining
+                        // required table cells
                         if ($ran){
                             for ($i=$counter; $i<10; $i++) { 
                                 $date = date('d/m/Y', strtotime("+ ".$i." days", strtotime($curr_date)));
@@ -246,7 +264,7 @@ while($res = $results->fetchArray(SQLITE3_ASSOC)){
                     }
 
                     // Generate chore's for previous page, current page and next page
-                    // Only current page will be visible
+                    // Only current page will be visible (each page shows range of 10 days)
                     $prev_date = date('Y-m-d' ,strtotime("- 10 days", strtotime(date('Y-m-d'))));
                     $day0_date = date('Y-m-d');
                     $day10_date = date('Y-m-d' ,strtotime("+ 10 days", strtotime(date('Y-m-d'))));
@@ -263,6 +281,8 @@ while($res = $results->fetchArray(SQLITE3_ASSOC)){
                 <div class="right-container">
                     <table class="members">
                         <?php
+                        // Generate a list of all memebers currently in the group and display in
+                        // this side panel
                         $connection = new Database();
                         $query = 'SELECT User.ID, User.displayname, User.moderator FROM User INNER JOIN
                             ChoreGroup ON User.GroupID = ChoreGroup.ID WHERE ChoreGroup.ID = :gid';
@@ -284,7 +304,7 @@ while($res = $results->fetchArray(SQLITE3_ASSOC)){
                             else{
                                 echo ('<td><img src="img/usr/default.png" alt="Profile Picture"></td>');
                             }
-                            echo('<td>'.$member['displayname'].'</td></tr>');
+                            echo('<td>'.h($member['displayname']).'</td></tr>');
                         }
                         ?>
                     </table>

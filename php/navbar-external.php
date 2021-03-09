@@ -1,4 +1,6 @@
 <?php
+// Template navbar for the index, login and register page - takes a $active variable which indicates
+// the current page such that active id can be set to correct link
     switch ($active){
         case 0:
             echo '<nav>

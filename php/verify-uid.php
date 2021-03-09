@@ -1,4 +1,6 @@
 <?php
+// Simple helper file that gets the displayname and moderator status of a given user as well as
+// verifying that posted uid belongs to same group as logged in user.
 if ($_SERVER['REQUEST_METHOD'] != 'POST'){
     header("Location: signout.php");
     exit();

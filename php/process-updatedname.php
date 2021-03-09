@@ -1,4 +1,5 @@
 <?php
+// File handles user editing their displayname
 if ($_SERVER['REQUEST_METHOD'] != 'POST'){
     header("Location: ./signout.php");
     exit();
@@ -17,6 +18,7 @@ if ($_POST['name'] == ""){
     exit();
 }
 
+// Reflect changes to displayname in user table
 $connection = new Database();
 $stmt = $connection->prepare("UPDATE User SET displayname=:dname WHERE ID=:id");
 $stmt->bindValue(':dname', $_POST['name'], SQLITE3_TEXT);

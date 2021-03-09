@@ -6,7 +6,7 @@ require_group();
 require_no_joining_status();
 
 if (!is_mod()){
-    header("Location: chore.php");
+    header("Location: chores.php");
     exit();
 }
 
@@ -15,7 +15,7 @@ $connection = new Database();
 $stmt = $connection->prepare("SELECT gname FROM ChoreGroup WHERE ID=:gid");
 $stmt->bindValue(':gid', $_SESSION['gid'], SQLITE3_INTEGER);
 $results = $stmt->execute();
-$gname = $results->fetchArray(SQLITE3_ASSOC)['gname'];
+$gname = h($results->fetchArray(SQLITE3_ASSOC)['gname']);
 ?>
 
 <!DOCTYPE html>
@@ -98,24 +98,28 @@ $gname = $results->fetchArray(SQLITE3_ASSOC)['gname'];
                         </colgroup>
                         <tbody>
                         <?php
+                        // Generate rows for member panel via record lookup from user db table
                         $stmt = $connection->prepare("SELECT ID, displayname FROM User Where GroupID=:gid");
                         $stmt->bindValue(":gid", $_SESSION['gid'], SQLITE3_INTEGER);
                         $result = $stmt->execute();
                         while ($res = $result->fetchArray(SQLITE3_ASSOC)){
                             echo ('<tr>');
+                            // Display crown symbol next to user if they have mod status
                             if (is_user_mod($res['ID'])){
                                 echo ('<td><embed src="img/crown.svg" alt="Mod Icon"></td>');
                             }
                             else{
                                 echo ('<td></td>');
                             }
+                            // Show users pfp if they have set one, otherwise display default
                             if (file_exists(ROOT."/img/usr/".$res['ID'].".jpeg")){
                                 echo ('<td><img src="img/usr/'.$res['ID'].'.jpeg" alt="Profile Picture" class="thumbnail"></td>');
                             }
                             else{
                                 echo ('<td><img src="img/usr/default.png" alt="Profile Picture"></td>');
                             }
-                            echo ('<td>'.$res['displayname'].'</td>');
+                            echo ('<td>'.h($res['displayname']).'</td>');
+                            // Button to view more info about user
                             echo ('<td class="magnify" data-uid="'.$res['ID'].'">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 490 490">
                                     <style>svg {cursor:pointer;}</style>
@@ -134,6 +138,8 @@ $gname = $results->fetchArray(SQLITE3_ASSOC)['gname'];
                 <div class="right-container" style="text-align:right">
                     <table id="join-requests">
                         <?php
+                        // Panel that displays all current incoming join requests for the group
+                        // fetched from JoinRequest db table
                         $stmt = $connection->prepare("SELECT JoinRequest.ID AS JoinID, User.ID AS UserID, User.displayname
                             FROM JoinRequest INNER JOIN User ON JoinRequest.UserID = User.ID 
                             WHERE JoinRequest.GroupID=:gid");
@@ -148,7 +154,7 @@ $gname = $results->fetchArray(SQLITE3_ASSOC)['gname'];
                             else{
                                 echo ('<td><img src="img/usr/default.png" alt="Profile Picture"></td>');
                             }
-                            echo ('<td>'.$res['displayname'].'</td>
+                            echo ('<td>'.h($res['displayname']).'</td>
                                 <td class="circle-button" id="accept-button"><a>✓</a></td>
                                 <td class="circle-button" id="decline-button"><a>✖</a></td>
                             </tr>');

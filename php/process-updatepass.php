@@ -1,4 +1,5 @@
 <?php
+// File handles user updating their password
 if ($_SERVER['REQUEST_METHOD'] != 'POST'){
     header("Location: ./signout.php");
     exit();
@@ -11,7 +12,7 @@ require_login();
 require_group();
 require_no_joining_status();
 
-// Verify password server side
+// Verify password meets existing criteria server side
 $passExpr = "/\s+/";
 
 if (!(strlen($_POST['pass1']) < 8 || preg_match($passExpr, $_POST['pass1']))){
@@ -28,7 +29,7 @@ else{
     exit();
 }
 
-
+// Update password to match new value within db table
 $connection = new Database();
 $stmt = $connection->prepare("UPDATE User SET pass=:pass WHERE ID=:id");
 $stmt->bindValue(':pass', $password, SQLITE3_TEXT);

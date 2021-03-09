@@ -15,7 +15,7 @@ $connection = new Database();
 $stmt = $connection->prepare("SELECT gname FROM ChoreGroup WHERE ID=:gid");
 $stmt->bindValue(':gid', $_SESSION['gid'], SQLITE3_INTEGER);
 $results = $stmt->execute();
-$gname = $results->fetchArray(SQLITE3_ASSOC)['gname'];
+$gname = h($results->fetchArray(SQLITE3_ASSOC)['gname']);
 ?>
 
 <!DOCTYPE html>
@@ -58,11 +58,13 @@ $gname = $results->fetchArray(SQLITE3_ASSOC)['gname'];
                                     <td>
                                         <select id="er-choreholder" name="choreholder">
                                             <?php
+                                            // Dropdown displays all users currently in group, list
+                                            // of users is obtained from db table
                                             $stmt = $connection->prepare("SELECT ID,displayname FROM User WHERE GroupID=:gid");
                                             $stmt->bindValue(":gid", $_SESSION['gid'], SQLITE3_INTEGER);
                                             $results = $stmt->execute();
                                             while ($res = $results->fetchArray(SQLITE3_ASSOC)){
-                                                echo ('<option value="'.$res['ID'].'">'.$res['displayname'].'</option>');
+                                                echo ('<option value="'.$res['ID'].'">'.h($res['displayname']).'</option>');
                                             }
                                             ?>
                                         </select>
@@ -115,11 +117,13 @@ $gname = $results->fetchArray(SQLITE3_ASSOC)['gname'];
                                     <td>
                                         <select name="choreholder">
                                             <?php
+                                            // Dropdown displays all users currently in group, list
+                                            // of users is obtained from db table
                                             $stmt = $connection->prepare("SELECT ID,displayname FROM User WHERE GroupID=:gid");
                                             $stmt->bindValue(":gid", $_SESSION['gid'], SQLITE3_INTEGER);
                                             $results = $stmt->execute();
                                             while ($res = $results->fetchArray(SQLITE3_ASSOC)){
-                                                echo ('<option value="'.$res['ID'].'">'.$res['displayname'].'</option>');
+                                                echo ('<option value="'.$res['ID'].'">'.h($res['displayname']).'</option>');
                                             }
                                             ?>
                                         </select>
@@ -172,11 +176,13 @@ $gname = $results->fetchArray(SQLITE3_ASSOC)['gname'];
                                     <td>
                                         <select id="es-choreholder" name="choreholder">
                                             <?php
+                                            // Dropdown displays all users currently in group, list
+                                            // of users is obtained from db table
                                             $stmt = $connection->prepare("SELECT ID,displayname FROM User WHERE GroupID=:gid");
                                             $stmt->bindValue(":gid", $_SESSION['gid'], SQLITE3_INTEGER);
                                             $results = $stmt->execute();
                                             while ($res = $results->fetchArray(SQLITE3_ASSOC)){
-                                                echo ('<option value="'.$res['ID'].'">'.$res['displayname'].'</option>');
+                                                echo ('<option value="'.$res['ID'].'">'.h($res['displayname']).'</option>');
                                             }
                                             ?>
                                         </select>
@@ -233,11 +239,13 @@ $gname = $results->fetchArray(SQLITE3_ASSOC)['gname'];
                                     <td>
                                         <select name="choreholder">
                                             <?php
+                                            // Dropdown displays all users currently in group, list
+                                            // of users is obtained from db table
                                             $stmt = $connection->prepare("SELECT ID,displayname FROM User WHERE GroupID=:gid");
                                             $stmt->bindValue(":gid", $_SESSION['gid'], SQLITE3_INTEGER);
                                             $results = $stmt->execute();
                                             while ($res = $results->fetchArray(SQLITE3_ASSOC)){
-                                                echo ('<option value="'.$res['ID'].'">'.$res['displayname'].'</option>');
+                                                echo ('<option value="'.$res['ID'].'">'.h($res['displayname']).'</option>');
                                             }
                                             ?>
                                         </select>
@@ -266,13 +274,15 @@ $gname = $results->fetchArray(SQLITE3_ASSOC)['gname'];
                         </colgroup>
                         <tbody id="prev-chores">
                             <?php
+                            // Display list of all chores that were 'ono-off' and have now passed the
+                            // completion deadline. Retrieved from the db chore table
                             $stmt = $connection->prepare("SELECT ID, contents FROM Chore WHERE repeats=0 
                                 AND GroupID=:gid AND julianday(date('now')) > julianday(lastchoreitemdate)");
                             $stmt->bindValue(':gid', $_SESSION['gid'], SQLITE3_INTEGER);
                             $results = $stmt->execute();
                             while ($res = $results->fetchArray(SQLITE3_ASSOC)){
                                 echo ('<tr data-choreid="'.$res['ID'].'">
-                                    <td>'.$res['contents'].'</td>
+                                    <td>'.h($res['contents']).'</td>
                                     <td class="other-circle-button delete-button"><a>🗑️</a></td>
                                 </tr>');
                             }
@@ -293,13 +303,15 @@ $gname = $results->fetchArray(SQLITE3_ASSOC)['gname'];
                         </colgroup>
                         <tbody id="repeating-chores">
                             <?php
+                            // Displays a list of all the groups repeating chores. Obtained from
+                            // the db chore table
                             $stmt = $connection->prepare("SELECT ID, contents FROM Chore WHERE repeats=1 
                                 AND GroupID=:gid");
                             $stmt->bindValue(':gid', $_SESSION['gid'], SQLITE3_INTEGER);
                             $results = $stmt->execute();
                             while ($res = $results->fetchArray(SQLITE3_ASSOC)){
                                 echo ('<tr data-choreid="'.$res['ID'].'">
-                                    <td>'.$res['contents'].'</td>
+                                    <td>'.h($res['contents']).'</td>
                                     <td class="other-circle-button edit-button"><a>🖊️</a></td>
                                     <td class="other-circle-button delete-button"><a>🗑️</a></td>
                                 </tr>');
@@ -322,13 +334,15 @@ $gname = $results->fetchArray(SQLITE3_ASSOC)['gname'];
                         </colgroup>
                         <tbody id="single-chores">
                             <?php
+                            // Display a list of all the one off chores currently set that have yet
+                            // to reach the deadline date 'upcoming'. Chores fetched from db table
                             $stmt = $connection->prepare("SELECT ID, contents FROM Chore WHERE repeats=0 
                                 AND GroupID=:gid AND julianday(date('now')) <= julianday(lastchoreitemdate)");
                             $stmt->bindValue(':gid', $_SESSION['gid'], SQLITE3_INTEGER);
                             $results = $stmt->execute();
                             while ($res = $results->fetchArray(SQLITE3_ASSOC)){
                                 echo ('<tr data-choreid="'.$res['ID'].'">
-                                    <td>'.$res['contents'].'</td>
+                                    <td>'.h($res['contents']).'</td>
                                     <td class="other-circle-button edit-button"><a>🖊️</a></td>
                                     <td class="other-circle-button delete-button"><a>🗑️</a></td>
                                 </tr>');

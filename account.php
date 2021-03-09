@@ -32,7 +32,7 @@ $res = $result->fetchArray(SQLITE3_ASSOC);
                     <h4 class="modal-title">Change displayname</h4>
                     <form id="displayname-form">
                         <label for="displayname" class="hide-element">New Displayname:</label>
-                        <input id="displayname-input" type="text" name="displayname" value="<?php echo $res['displayname']?>">
+                        <input id="displayname-input" type="text" name="displayname" value="<?php echo h($res['displayname'])?>">
                         <p id="nmissing" class="warning hidden">Name Required</p>
                         <br><br>
                         <input type="submit" value="Submit">
@@ -44,7 +44,7 @@ $res = $result->fetchArray(SQLITE3_ASSOC);
                     <h4 class="modal-title">Change email</h4>
                     <form id="email-form">
                         <label for="email" class="hide-element">New Displayname:</label>
-                        <input id="email-input" type="email" name="email" value="<?php echo $res['email']?>">
+                        <input id="email-input" type="email" name="email" value="<?php echo h($res['email'])?>">
                         <p id="emissing" class="warning hidden">Email Required</p>
                         <p id="einvalid" class="warning hidden">Email invalid</p>
                         <p id="etaken" class="warning hidden">Email already taken</p>
@@ -93,6 +93,7 @@ $res = $result->fetchArray(SQLITE3_ASSOC);
             <div class="focus-container">
                 <div style="width:100%">
                     <?php
+                    // Display user pfp if set otherwise display default picture
                     if (file_exists(ROOT."/img/usr/".$res['ID'].".jpeg")){
                         echo ('<td><img id="user-img" class="big-pic pointer" src="img/usr/'.$res['ID'].'.jpeg" alt="Profile Picture"></td>');
                     }
@@ -104,12 +105,12 @@ $res = $result->fetchArray(SQLITE3_ASSOC);
                 <table id="user-details">
                     <tr>
                         <td>Username:</td>
-                        <td><?php echo $res['username'] ?></td>
+                        <td><?php echo h($res['username'])?></td>
                         <td></td>
                     </tr>
                     <tr>
                         <td>Display Name:</td>
-                        <td id="user-displayname"><?php echo $res['displayname'] ?></td>
+                        <td id="user-displayname"><?php echo h($res['displayname'])?></td>
                         <td class="magnify" id="edit-displayname">
                             <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="18" height="18px" viewBox="0 0 512 512" xmlns:xlink="http://www.w3.org/1999/xlink" enable-background="new 0 0 512 512">
                                 <path style="fill:#ffffff;" d="m453.7,133l-286,289.6-71.6-75 284.8-288.4c9-9.1 24.8-9 33.7,0.1l39.2,40.3c9,9.2 8.9,24.2-0.1,33.4zm-375.7,254.4l49.1,51.5-66.9,14.5 17.8-66zm404.8-316.3l-39.2-40.3c-13.3-14.8-54.9-35.8-91.5-0.4l-298.7,302.5c-2.5,2.5-4.3,5.6-5.2,9l-36,133.1c-4.6,17 4.2,27.5 19.6,25.7 1.4-0.2 140.9-30.1 140.9-30.1 3.8-0.8 7.3-2.8 10.1-5.6l299.6-303.4c24.6-24.8 24.8-65.4 0.4-90.5z"/>
@@ -118,7 +119,7 @@ $res = $result->fetchArray(SQLITE3_ASSOC);
                     </tr>
                     <tr>
                         <td>Email:</td>
-                        <td id="user-email"><?php echo $res['email'] ?></td>
+                        <td id="user-email"><?php echo h($res['email'])?></td>
                         <td class="magnify" id="edit-email">
                             <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="18" height="18px" viewBox="0 0 512 512" xmlns:xlink="http://www.w3.org/1999/xlink" enable-background="new 0 0 512 512">
                                 <path style="fill:#ffffff;" d="m453.7,133l-286,289.6-71.6-75 284.8-288.4c9-9.1 24.8-9 33.7,0.1l39.2,40.3c9,9.2 8.9,24.2-0.1,33.4zm-375.7,254.4l49.1,51.5-66.9,14.5 17.8-66zm404.8-316.3l-39.2-40.3c-13.3-14.8-54.9-35.8-91.5-0.4l-298.7,302.5c-2.5,2.5-4.3,5.6-5.2,9l-36,133.1c-4.6,17 4.2,27.5 19.6,25.7 1.4-0.2 140.9-30.1 140.9-30.1 3.8-0.8 7.3-2.8 10.1-5.6l299.6-303.4c24.6-24.8 24.8-65.4 0.4-90.5z"/>

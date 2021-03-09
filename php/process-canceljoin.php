@@ -1,4 +1,6 @@
 <?php
+// File handles case that user wishes to cancel their join request
+// Removes relevant joinrequest record from table
 if ($_SERVER['REQUEST_METHOD'] != 'POST'){
     header("Location: ./signout.php");
     exit();

@@ -1,4 +1,6 @@
 <?php
+// Processes a user being forcibly removed from the group by a moderator and handles the request
+// in the same manner as leave-group but uses the posted id as to the session id
 if ($_SERVER['REQUEST_METHOD'] != 'POST'){
     header("Location: signout.php");
     exit();

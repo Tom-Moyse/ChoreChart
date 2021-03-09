@@ -1,4 +1,5 @@
 <?php
+// File that returns thr groupname of the currently logged in user
 if ($_SERVER['REQUEST_METHOD'] != 'POST'){
     header("Location: ./signout.php");
     exit();
@@ -15,6 +16,6 @@ $stmt = $connection->prepare('SELECT ChoreGroup.gname FROM JoinRequest INNER JOI
                             ON JoinRequest.GroupID = ChoreGroup.ID WHERE JoinRequest.UserID=:id');
 $stmt->bindValue(':id', $_SESSION['uid'], SQLITE3_INTEGER);
 $results = $stmt->execute();
-$res = $results->fetchArray(SQLITE3_ASSOC)['gname'];
+$res = h($results->fetchArray(SQLITE3_ASSOC)['gname']);
 echo $res;
 ?>

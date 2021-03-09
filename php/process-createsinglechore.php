@@ -1,4 +1,7 @@
 <?php
+// File handles creation of a new one-off chore for a given group based upon user's form parameters
+// and returns the corresponding html for the chore item such that it can be dynamically added to
+// the page via js/ajax
 if ($_SERVER['REQUEST_METHOD'] != 'POST'){
     header("Location: ./signout.php");
     exit();
@@ -51,13 +54,16 @@ if (isset($_POST['fixed'])){
         $substmt->bindValue(':gid', $_SESSION['gid'], SQLITE3_INTEGER);
         $results = $substmt->execute();
         $res = $results->fetchArray(SQLITE3_ASSOC);
+        // If query fails to produce a result assign chore item to logged in user
         if ($res == false){
             $stmt->bindValue(':id', $_SESSION['uid'], SQLITE3_INTEGER);
         }
+        // Otherwise assign chore item to group member with least current amount of chore items
         else{
             $stmt->bindValue(':id', $res['ID'], SQLITE3_INTEGER);
         }
     }
+    // If their was at least one user with zero chore items, assign choreitem to said user
     else{
         $stmt->bindValue(':id', $res['ID'], SQLITE3_INTEGER);
     }

@@ -1,4 +1,7 @@
 <?php
+// The file returns all the html for constructing a table chore item view and mirrors functionality
+// located within chores but is instead called via a post request. This is helpful as it allows new
+// tables to be generated dynamically via js/ajax when the user presses the left and right buttons
 if ($_SERVER['REQUEST_METHOD'] != 'POST'){
     header("Location: signout.php");
     exit();
@@ -20,6 +23,8 @@ function shorten($input){
 $finish_date = date('Y-m-d' ,strtotime("+ 10 days", strtotime($_POST['date'])));
 
 $connection = new Database();
+// Relevant information is queried for each choreitem, and all choreitems
+// associated with the given group between the two given dates are selected
 $query = 'SELECT ChoreItem.contents, ChoreItem.completed, ChoreItem.deadline,
     User.displayname FROM ChoreItem INNER JOIN User ON ChoreItem.UserID =
     User.ID WHERE User.GroupID = :gid AND ChoreItem.deadline BETWEEN :d1 AND :d2
@@ -36,9 +41,12 @@ $prev_counter = 0;
 $date = date('d/m/Y', strtotime("+ ".$counter." days", strtotime($curr_date)));
 $first = true;
 $ran = false;
+// Each chore item in the group is iterated over
 while ($res= $page_results->fetchArray(SQLITE3_ASSOC)){
     $ran = true;
     // Check if current chore is on a new day to previous (keep track of days)
+    // If so move onto next table cell until chore item found or ten cells
+    // have been generated
     while (strtotime($res['deadline']) >= strtotime("+ ".$counter." days", strtotime($curr_date))){
         $date = date('d/m/Y', strtotime("+ ".$counter." days", strtotime($curr_date)));
         
@@ -61,7 +69,8 @@ while ($res= $page_results->fetchArray(SQLITE3_ASSOC)){
     $date_no_seconds = date("d/m/Y H:i", strtotime($res['deadline']));
     // Output html relevant to current chore
     $data_info = 'data-contents="'.$res['contents'].'" data-deadline="'.
-                $date_no_seconds.'" data-choreholder="'.$res['displayname'].'"';
+        $date_no_seconds.'" data-choreholder="'.$res['displayname'].'"';
+    // Chore item is added to current table cell
     if ($res['completed'] == 0){
         echo ('<li class="chore-element" '.$data_info.'>'.shorten($res['contents']).'</li>');
     }
@@ -70,6 +79,8 @@ while ($res= $page_results->fetchArray(SQLITE3_ASSOC)){
     }
     
 }
+// If all choreitems were added before last table cell added, add remaining
+// required table cells
 if ($ran){
     for ($i=$counter; $i<10; $i++) { 
         $date = date('d/m/Y', strtotime("+ ".$i." days", strtotime($curr_date)));
