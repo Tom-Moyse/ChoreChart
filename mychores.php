@@ -105,20 +105,14 @@ while($res = $results->fetchArray(SQLITE3_ASSOC)){
                 <div class="modal-content fast-animate">
                     <h3>Chore Info</h3>
                     <table id="chore-info" style="table-layout:fixed;width:100%;margin:auto;">
-                        <colgroup>
-                            <col style="width: 30%;">
-                            <col style="width: 70%;">
-                        </colgroup>
-                        <tbody>
-                            <tr>
-                                <td>Chore Description:</td>
-                                <td id="cdesc">chore description</td>
-                            </tr>
-                            <tr>
-                                <td>Chore Deadline:</td>
-                                <td id="cdate">relative date</td>
-                            </tr>
-                        </tbody>
+                        <tr>
+                            <td>Chore Description:</td>
+                            <td id="cdesc">chore description</td>
+                        </tr>
+                        <tr>
+                            <td>Chore Deadline:</td>
+                            <td id="cdate">relative date</td>
+                        </tr>
                     </table>
                     <a class="button" id="toggle-complete" style="color:white">Mark as Complete</a>
                 </div>
@@ -238,6 +232,31 @@ while($res = $results->fetchArray(SQLITE3_ASSOC)){
                 genTable($prev_date, $day0_date, false, "left-chores");
                 genTable($day0_date, $day10_date, true, "mid-chores");
                 genTable($day10_date, $day20_date, false, "right-chores");
+                ?>
+            </div>
+            <div id="chore-notif">
+                <h4>Active Chore</h4>
+                <br>
+                <?php
+                $stmt = $connection->prepare("SELECT contents, deadline FROM ChoreItem WHERE
+                    UserID=:id AND julianday(deadline) > julianday(date('now')) AND completed=0
+                    ORDER BY deadline ASC");
+                $stmt->bindValue(':id', $_SESSION['uid'], SQLITE3_INTEGER);
+                $results = $stmt->execute();
+                $res = $results->fetchArray(SQLITE3_ASSOC);
+
+                if ($res == false){
+                    echo ('<p>You have completed all your chores!</p>');
+                }
+                else{
+                    echo('<table id="chore-info" style="margin:auto"><tr>
+                            <td>Chore: </td>
+                            <td>'.$res['contents'].'</td>
+                        </tr><tr>
+                            <td>Deadline: </td>
+                            <td>'.substr($res['deadline'],0,-3).'</td>
+                        </tr></table>');
+                }
                 ?>
             </div>
         </div>

@@ -94,10 +94,10 @@ $res = $result->fetchArray(SQLITE3_ASSOC);
                 <div style="width:100%">
                     <?php
                     if (file_exists(ROOT."/img/usr/".$res['ID'].".jpeg")){
-                        echo ('<td><img id="user-img" class="big-pic" src="img/usr/'.$res['ID'].'.jpeg" alt="Profile Picture"></td>');
+                        echo ('<td><img id="user-img" class="big-pic pointer" src="img/usr/'.$res['ID'].'.jpeg" alt="Profile Picture"></td>');
                     }
                     else{
-                        echo ('<td><img id="user-img" class="big-pic" src="img/usr/default.png" alt="Profile Picture"></td>');
+                        echo ('<td><img id="user-img" class="big-pic pointer" src="img/usr/default.png" alt="Profile Picture"></td>');
                     }
                     ?>
                 </div>

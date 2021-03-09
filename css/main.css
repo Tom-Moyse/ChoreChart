@@ -443,6 +443,20 @@ form input[type="text"], form input[type="password"], form input[type="email"]{
     margin-top: 5%;
 }
 
+#chore-notif{
+    width: 30%;
+    padding: 20px;
+    margin:auto;
+    margin-top: 5%;
+    background-color: whitesmoke;
+    border-radius: 5px;
+    box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+}
+
+#chore-notif *{
+    color: #404040;
+}
+
 .chores{
     overflow: hidden;
     background-color: whitesmoke;
@@ -683,13 +697,13 @@ form input[type="text"], form input[type="password"], form input[type="email"]{
     padding-top: 10px;
 }
 
-#user-img{
-    cursor: pointer;
-}
-
 .thumbnail {
     object-fit: cover;
     width:40px;
     height:40px;
+}
+
+.pointer {
+    cursor: pointer;
 }
 

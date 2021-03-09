@@ -33,6 +33,7 @@ $(function(){
                 success:function(response){
                     if (response == "0"){
                         console.log("Marked item incomplete");
+                        updateActiveChore();
                     }
                     else{
                         alert(response);
@@ -50,6 +51,7 @@ $(function(){
                 success:function(response){
                     if (response == "0"){
                         console.log("Marked item complete");
+                        updateActiveChore();
                     }
                     else{
                         alert(response);
@@ -123,4 +125,14 @@ function doRightScroll(){
         })
         latestDate.setDate(rightDate.getDate());
     }
+}
+
+function updateActiveChore(){
+    $.ajax({
+        url: 'php/get-activechore.php',
+        type: 'get',
+        success:function(html){
+            $("#chore-notif").html(html);
+        }
+    });
 }
