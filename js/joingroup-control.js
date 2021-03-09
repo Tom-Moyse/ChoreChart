@@ -1,7 +1,9 @@
 $(function (){
+    // Bind form submits to relevant functions
     $('#join-form').submit( joinGroup );
     $('#create-form').submit( createGroup );
 
+    // Bind all buttons to their relevant modals
     $('#join').on('click', function(e){
         e.stopPropagation();
         $('#join-modal').removeClass("hidden");
@@ -13,6 +15,8 @@ $(function (){
     $('.modal-content').on('click', function(e){
         e.stopPropagation();
     });
+
+    // Minimise and reset all modals when any non-modal content is clicked on
     $(document).on('click', function(e){
         if( $(e.target).closest(".modal-content").length > 0 && !$(e.target).hasClass("button")) {
             return false;
@@ -24,7 +28,9 @@ $(function (){
     });
 })
 
+// Handle join group form and relevant functionality
 function joinGroup(){
+    // Verify form contents meet criteria, if not display error
     var coderegex = /^([a-zA-Z0-9])+$/;
     var code = $("input[name='code']").val();
 
@@ -58,7 +64,9 @@ function joinGroup(){
     return false;
 }
 
+// Handle create group form and relevant functionality
 function createGroup(){
+    // Verify form contents meet given criteria
     var nameregex = /^([a-zA-Z0-9_!?,'. -])+$/;
     var name = $("input[name='group']").val();
 

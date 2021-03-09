@@ -1,23 +1,22 @@
 $(function(){
+    // Bind form submits to relevant functions
     $('#displayname-form').submit( changeName );
     $('#email-form').submit( changeEmail );
     $('#password-form').submit( changePassword );
 
+    // Bind all buttons to their relevant modals
     $("#edit-displayname").on('click', function(e){
         $("#edit-displayname-modal").removeClass('hidden');
         e.stopPropagation();
     });
-
     $("#edit-email").on('click', function(e){
         $("#edit-email-modal").removeClass('hidden');
         e.stopPropagation();
     });
-
     $("#change-pass").on('click', function(e){
         $("#edit-password-modal").removeClass('hidden');
         e.stopPropagation();
     });
-
     $("#user-img").on('click', function(e){
         $("#upload-image-modal").removeClass('hidden');
         e.stopPropagation();
@@ -27,18 +26,18 @@ $(function(){
             e.stopPropagation();
         });
     });
-
     $("#leave-group").on('click', function(e){
         $("#leave-confirm-modal").removeClass('hidden');
         e.stopPropagation();
     });
 
+    // Bind redirect event to leave group button
     $("#confirm-leave").on('click', function(e){
         window.location.href = "php/leave-group.php";
         e.stopPropagation();
     });
 
-
+    // Minimise and reset all modals when any non-modal content is clicked on
     $(document).on('click', function(e){
         if( $(e.target).closest(".modal-content").length > 0) {
             return;     
@@ -55,7 +54,9 @@ $(function(){
     });
 });
 
+// Handles displayname modal and relevant functionality
 function changeName(){
+    // Verify displayname input and show/hide errors as appropriate
     var name = $("#displayname-input").val();
     if (name != ""){
         $("#nmissing").addClass("hidden");
@@ -65,6 +66,8 @@ function changeName(){
         return false;
     }
 
+    // Send post request to process-updatename and on "0" response update displayname on page
+    // On fail display alert informing user that the request has failed
     $.ajax({
         url: 'php/process-updatedname.php',
         type: 'post',
@@ -83,7 +86,9 @@ function changeName(){
     return false;
 }
 
+// Handles email modal and relevant functionality
 function changeEmail(){
+    // Verify email input and show/hide errors as appropriate
     var emailregex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
     var email = $("#email-input").val();
     if (email != ""){
@@ -102,6 +107,8 @@ function changeEmail(){
     }
     $("#etaken").addClass("hidden");
 
+    // Send post request to process-updatemail and on "0" response update email on page
+    // On fail display error that email was already taken
     $.ajax({
         url: 'php/process-updateemail.php',
         type: 'post',
@@ -120,7 +127,9 @@ function changeEmail(){
     return false;
 }
 
+// Handles password modal and relevant functionality
 function changePassword(){
+    // Verify password inputs and show/hide errors as appropriate
     var pass1 = $("#password-input").val();
     var pass2 = $("#password-confirm-input").val();
     var passregex = /^\S*$/
@@ -162,6 +171,8 @@ function changePassword(){
         return false;
     }
 
+    // Send post request to process-updatepass
+    // On fail display alert informing user that the request has failed
     $.ajax({
         url: 'php/process-updatepass.php',
         type: 'post',
@@ -178,7 +189,9 @@ function changePassword(){
     return false;
 }
 
+// Handles image modal and relevant functionality
 function handleUpload(){
+    // Verify image inputs and show/hide errors as appropriate
     if ($("#avatar").get(0).files.length === 0){
         $("#fmissing").removeClass('hidden');
         return;
@@ -194,7 +207,7 @@ function handleUpload(){
         $("#fsize").addClass('hidden');
     }
 
-
+    // Get filename to verify correct apparent filetype
     var filename = $("#avatar").val();
     var ext = filename.split('.').pop().toLowerCase();
     if (ext != "jpg" && ext != "jpeg"){
@@ -205,10 +218,13 @@ function handleUpload(){
         $("#fmissing").addClass('hidden');
     }
 
+    // Add file to form data object
     var file_data = $('#avatar').prop('files')[0];
     var form_data = new FormData();
     form_data.append('file', file_data);
 
+    // Send post request to upload-img and on 0 response update avatar on page
+    // On fail display alert informing user that the request has failed
     $.ajax({
         url: "php/uploadimg.php",
         contentType: false,

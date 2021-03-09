@@ -1,3 +1,4 @@
+// Store current date + 10 days
 var rightDate = new Date();
 rightDate.setDate(rightDate.getDate()+10);
 var latestDate = new Date(rightDate);
@@ -5,6 +6,8 @@ var target;
 
 
 $(function(){
+    // Bind chore element to info popup and handle filling modal with relevant information as well
+    // as positioning popup appropriately
     $("#chore-container").on('click', '.chores table tbody tr td ul .chore-element', function(e){
         target = $(e.target);
 
@@ -23,7 +26,11 @@ $(function(){
         e.stopPropagation();
     });
 
+    // Bind complete button to relevant functionality
     $("#toggle-complete").on('click', function(e){
+        // Depending on current complete status make ajax post request to mark-complete with the
+        // relevant complete variable. In case of non "0" response an error is displayed to the user
+        // Otherwise, the updateActiveChore function is called
         if (target.hasClass("complete")){
             target.removeClass("complete");
             $.ajax({
@@ -32,12 +39,10 @@ $(function(){
                 data: {"ID":target.data("choreid"),"complete":0},
                 success:function(response){
                     if (response == "0"){
-                        console.log("Marked item incomplete");
                         updateActiveChore();
                     }
                     else{
-                        alert(response);
-                        console.log("Failed to mark item incomplete");
+                        alert("Error toggling complete status, please try again later");
                     }
                 }
             });
@@ -50,18 +55,17 @@ $(function(){
                 data: {"ID":target.data("choreid"),"complete":1},
                 success:function(response){
                     if (response == "0"){
-                        console.log("Marked item complete");
                         updateActiveChore();
                     }
                     else{
-                        alert(response);
-                        console.log("Failed to mark item complete");
+                        alert("Error toggling complete status, please try again later");
                     }
                 }
             });
         }
     });
 
+    // Minimise and reset all modals when any non-modal content is clicked on
     $(document).on('click', function(e){
         if( $(e.target).closest(".modal-content").length > 0 && !$(e.target).hasClass("button")) {
             return false;
@@ -74,7 +78,9 @@ $(function(){
     $('#right-scroll').on('click', doRightScroll);
 });
 
+// Do left scroll cycles contents of divs to the right and requests contents of left div
 function doLeftScroll(){
+    // Update global date varaiables and get new start date for left table
     rightDate.setDate(rightDate.getDate() - 10);
     var newLeftDate = new Date(rightDate);
     newLeftDate.setDate(newLeftDate.getDate() - 20);
@@ -83,6 +89,7 @@ function doLeftScroll(){
     $('#right-chores').html($('#mid-chores').html());
     $('#mid-chores').html($('#left-chores').html());
 
+    // Request choreitems for the left table and set to the response value
     $.ajax({
         url:'./php/get-mychoreitems.php',
         type:'post',
@@ -93,6 +100,7 @@ function doLeftScroll(){
     });
 }
 
+// Do right scroll cycles contents of divs to the left and requests contents of right div
 function doRightScroll(){
     var rightContent = $('#right-chores').html();
     var midContent = $('#mid-chores').html();
@@ -102,31 +110,36 @@ function doRightScroll(){
 
     // Update chore items if highest date checked on current page visit
     rightDate.setDate(rightDate.getDate() + 10);
-    if (rightDate > latestDate){
-        $.ajax({
-            url:'./php/gen-choreitems.php',
-            type:'post',
-            data:{date: rightDate.toJSON().slice(0,10)},
-            success:function(response){
-                if (response == "0"){
-                    $.ajax({
-                        url:'./php/get-mychoreitems.php',
-                        type:'post',
-                        data:{date: rightDate.toJSON().slice(0,10)},
-                        success:function(html){
-                            $("#right-chores").html(html);
-                        }
-                    });
-                }
-                else{
-                    alert(response);
-                }
+
+
+    // Send post request to gen-mychoreitems with the given date on non "0" response inform user
+    // of error otherwise make post request to get-mychoreitems with the given date and on success
+    // Set right table
+    $.ajax({
+        url:'./php/gen-choreitems.php',
+        type:'post',
+        data:{date: rightDate.toJSON().slice(0,10)},
+        success:function(response){
+            if (response != "0"){
+                alert("Error retrieving chore items, please try again later");
             }
-        })
-        latestDate.setDate(rightDate.getDate());
-    }
+            else{
+                $.ajax({
+                    url:'./php/get-choreitems.php',
+                    type:'post',
+                    data:{date: rightDate.toJSON().slice(0,10)},
+                    success:function(html){
+                        $("#right-chores").html(html);
+                    }
+                });
+            }
+        }
+    })
+    latestDate.setDate(rightDate.getDate());
 }
 
+// Function makes ajax get request to get-activechore and can subsequently set the active chore
+// on the webpage to the html response.
 function updateActiveChore(){
     $.ajax({
         url: 'php/get-activechore.php',

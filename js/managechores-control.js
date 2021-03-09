@@ -1,4 +1,5 @@
 $(function(){
+    // Bind all buttons to their relevant modals
     $("#create-single-button").on('click', function(e){
         createSingle(e);
         $("#create-single-modal").removeClass("hidden");
@@ -9,6 +10,9 @@ $(function(){
         $("#create-repeating-modal").removeClass("hidden");
         e.stopPropagation();
     });
+
+    // Bind buttons for individual chores to container div such that dynamically created chore rows
+    // maintain on click functionality of displaying relevant modal/removing chore
     $("#single-chores").on('click', 'tr .edit-button', function(e){
         editSingle(e);
         $("#edit-single-modal").removeClass("hidden");
@@ -31,6 +35,8 @@ $(function(){
         deleteChore(e);
         e.stopPropagation();
     });
+
+    // Bind checkboxes in modals to display/hide additional form content based upon their state
     $("#cs-check").on('change', function(e){
         $("#cs-chorehold").toggleClass("hidden");
     });
@@ -47,7 +53,7 @@ $(function(){
         $("#er-chorehold").toggleClass("hidden");
     });
 
-
+    // Minimise and reset all modals when any non-modal content is clicked on
     $(document).on('click', function(e){
         if ($(e.target).closest(".modal-content").length > 0){
             return;   
@@ -61,6 +67,7 @@ $(function(){
     choreMessageDisplay();
 });
 
+// Helper function to reset all modals/forms
 function minimizeModals(){
     $(".modal").addClass("hidden");
     $(".modal-form").trigger("reset");
@@ -68,12 +75,14 @@ function minimizeModals(){
     choreMessageDisplay();
 }
 
+// Helper function to hide all errors that may be displayed when interacting with forms
 function hideAllErrors(){
     $(".chore-error").addClass("hidden");
     $(".date-error").addClass("hidden");
     $(".frequency-error").addClass("hidden");
 }
 
+// Handles displaying message in div panel in case of zero relevant chores of said type
 function choreMessageDisplay(){
     if ($("#past-chores tr").length == 0){
         $("#no-past-chores").removeClass("hidden");
@@ -95,11 +104,14 @@ function choreMessageDisplay(){
     }
 }
 
+// Handles the edit single modal and all relevant functionality
 function editSingle(e){
+    // Retrieve chore id from parent data
     var id = $(e.currentTarget).parent().data("choreid");
     console.log(id);
 
-    //Get all values via ajax
+    // Get all default form values via ajax post request to fetch-singlechoreinfo in case of non "0"
+    // response inform user of error otherwise setup form default values
     $.ajax({
         url: 'php/fetch-singlechoreinfo.php',
         type: 'post',
@@ -107,7 +119,7 @@ function editSingle(e){
         success:function(data){
             var result = $.parseJSON(data);
             if (result[0] != "0"){
-                alert("Error occured");
+                alert("Error handling request, please try again later");
             }
             else{
                 $("#es-chore").val(result[1]);
@@ -126,12 +138,11 @@ function editSingle(e){
         }
     });
 
+    // Bind function to form submission button using 'one' handler to prevent duplicate submissions 
     $("#edit-single-chore").one('click', function(){
-        $(".chore-error").addClass("hidden");
-        $(".date-error").addClass("hidden");
-        $(".frequency-error").addClass("hidden");
+        hideAllErrors();
         var error = false;
-        // Validate inputs
+        // Validate form inputs
         if ($("#es-chore").val().trim().length == 0){
             $(".chore-error").removeClass("hidden");
             error = true;
@@ -160,7 +171,9 @@ function editSingle(e){
             }
         }
         
-
+        // If no errors occured make ajax post request to process-editsinglechore with serialized
+        // form data. If non "0" response received inform user of error, otherwise check if chore
+        // should be moved to repeating chores and handle appropriately
         if (!error){
             $.ajax({
                 url: 'php/process-editsinglechore.php',
@@ -169,7 +182,7 @@ function editSingle(e){
                 success:function(data){
                     var result = $.parseJSON(data);
                     if (result[0] != "0"){
-                        alert("Error occured");
+                        alert("Error handling request, please try again later");
                     }
                     else{
                         if (result[1]){
@@ -188,10 +201,13 @@ function editSingle(e){
 
 }
 
+// Handles the edit repeating modal and all relevant functionality
 function editRepeating(e){
+    // Retrieve chore id from parent data
     var id = $(e.currentTarget).parent().data("choreid");
 
-    //Get all values via ajax
+    // Get all default form values via ajax post request to fetch-repeatingchoreinfo in case of non "0"
+    // response inform user of error otherwise setup form default values
     $.ajax({
         url: 'php/fetch-repeatingchoreinfo.php',
         type: 'post',
@@ -199,7 +215,7 @@ function editRepeating(e){
         success:function(data){
             var result = $.parseJSON(data);
             if (result[0] != "0"){
-                alert("Error occured");
+                alert("Error handling request, please try again later");
             }
             else{
                 $("#er-chore").val(result[1]);
@@ -244,12 +260,11 @@ function editRepeating(e){
         }
     });
 
+    // Bind function to form submission button using 'one' handler to prevent duplicate submissions
     $("#edit-repeating-chore").one('click', function(){
-        $(".chore-error").addClass("hidden");
-        $(".date-error").addClass("hidden");
-        $(".frequency-error").addClass("hidden");
+        hideAllErrors();
         var error = false;
-        // Validate inputs
+        // Validate all inputs
         if ($("#er-chore").val().trim().length == 0){
             $(".chore-error").removeClass("hidden");
             error = true;
@@ -276,6 +291,8 @@ function editRepeating(e){
             error = true;
         }
 
+        // If no errors occured make ajax post request to process-editsinglechore with serialized
+        // form data. If non "0" response received inform user of error.
         if (!error){
             $.ajax({
                 url: 'php/process-editrepeatingchore.php',
@@ -286,21 +303,22 @@ function editRepeating(e){
                         minimizeModals();
                     }
                     else{
-                        alert("Error occured")
+                        alert("Error handling request, please try again later")
                     }
                 }
             });
-            console.log("Editing repeating chore");
         }
     })
 }
 
+// Handles the create single modal and all relevant functionality
 function createSingle(e){
+    // Bind function to form submission button using 'one' handler to prevent duplicate submissions
     $("#add-single-chore").one('click', function(){
         $(".chore-error").addClass("hidden");
         $(".date-error").addClass("hidden");
         var error = false;
-        // Validate inputs
+        // Validate form inputs
         if ($("#cs-chore").val().trim().length == 0){
             $(".chore-error").removeClass("hidden");
             error = true;
@@ -317,6 +335,9 @@ function createSingle(e){
             error = true;
         }
 
+        // If no errors occured make ajax post request to process-createsinglechore with serialized
+        // form data. If non "0" response received inform user of error. Otherwise, update html,
+        // to display new chore.
         if (!error){
             $.ajax({
                 url: 'php/process-createsinglechore.php',
@@ -330,7 +351,7 @@ function createSingle(e){
                         minimizeModals();
                     }
                     else{
-                        alert("ERROR");
+                        alert("Error handling request, please try again later");
                     }
                 },
             });
@@ -338,13 +359,13 @@ function createSingle(e){
     });
 }
 
+// Handles the create repeating modal and all relevant functionality
 function createRepeating(e){
+    // Bind function to form submission button using 'one' handler to prevent duplicate submissions
     $("#add-repeating-chore").one('click', function(){
-        $(".chore-error").addClass("hidden");
-        $(".date-error").addClass("hidden");
-        $(".frequency-error").addClass("hidden");
+        hideAllErrors()
         var error = false;
-        // Validate inputs
+        // Validate form inputs
         if ($("#cr-chore").val().trim().length == 0){
             $(".chore-error").removeClass("hidden");
             error = true;
@@ -371,6 +392,9 @@ function createRepeating(e){
             error = true;
         }
 
+        // If no errors occured make ajax post request to process-createrepeatingchore with serialized
+        // form data. If non "0" response received inform user of error. Otherwise, update html,
+        // to display new chore.
         if (!error){
             $.ajax({
                 url: 'php/process-createrepeatingchore.php',
@@ -384,20 +408,21 @@ function createRepeating(e){
                         minimizeModals();
                     }
                     else{
-                        alert("ERROR");
+                        alert("Error handling request, please try again later");
                     }
                 },
             });
         }
-    });
-
-    
+    }); 
 }
 
+// Handles chore deletion
 function deleteChore(e){
+    // Retrieve chore id from parent data
     var id = $(e.currentTarget).parent().data("choreid");
 
-    // Delete chore via ajax
+    // Make ajax post request to process-deletechore, If non "0" response received inform user of 
+    // error. Otherwise, update html, to remove deletedd chore.
     $.ajax({
         url: 'php/process-deletechore.php',
         type: 'post',
@@ -408,10 +433,9 @@ function deleteChore(e){
                 $(e.currentTarget).parent().remove();
             }
             else{
-                alert("Failed to delete chore");
+                alert("Error handling request, please try again later");
             }
             choreMessageDisplay();
         }
     });
-    
 }

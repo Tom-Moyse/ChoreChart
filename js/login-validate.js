@@ -1,8 +1,11 @@
 $(function (){
+    // Bind form submits to relevant function
     $('form').submit( validateForm );
 })
 
+// Handles login form and relevant functionality
 function validateForm(){
+    // Verify form contents meet criteria, if not display relevant errors
     var error = false;
     var uename = $("input[name='uname-email']").val();
     var pass = $("input[name='password']").val();
